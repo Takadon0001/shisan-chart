@@ -484,7 +484,7 @@ dialog.wide{width:min(720px,calc(100vw - 32px))}
       </ul>
     </div>
   </section>
-  <p class="privacy-note">データはこの端末のブラウザ内にだけ保存されます　・　バージョン 1.11.0</p>
+  <p class="privacy-note">データはこの端末のブラウザ内にだけ保存されます　・　バージョン 1.12.0</p>
 </main>
 
 <section id="lockScreen" class="lock" hidden aria-labelledby="lockTitle">
@@ -2659,7 +2659,7 @@ function renderProtect(){
   if(!crypt){
     box.innerHTML = `<p class="small" style="margin:0 0 10px">現在: <b>オフ</b>（データは暗号化されずに保存されています）</p>
       <button class="btn primary" data-pa="enable">パスコードを設定する</button>
-      <p class="small muted" style="margin:10px 0 0">パスキー（このPC＝Windows Hello の PIN・顔・指紋や、スマホの画面ロックなど）で開けるようにするには、先にパスコードを設定してください。パスコードは、パスキーが使えないときの予備になります。</p>`;
+      <p class="small muted" style="margin:10px 0 0">パスキー（Windows Hello の PIN・顔・指紋や、スマホの画面ロックなど）で開けるようにするには、先にパスコードを設定してください。パスコードは、パスキーが使えないときの予備になります。</p>`;
     return;
   }
   const rec = !!crypt.wraps.rec;
@@ -2690,7 +2690,7 @@ $('#protectBox').addEventListener('click', async e => {
     let recCode = null;
     const ok = await passPrompt({
       title:'パスコードを設定', ok:'設定する',
-      msg:'数字だけなら6桁以上、英字を混ぜるなら8文字以上で設定できます。短い数字ほど解読されやすくなるため、毎日の解除はパスキー（「このPC」＝Windows Hello の PIN など）にして、パスコードは長めにするのがおすすめです。パスコードはどこにも保存されません。設定すると、忘れたときに使う「リカバリーキー」が表示されます。',
+      msg:'数字だけなら6桁以上、英字を混ぜるなら8文字以上で設定できます。短い数字ほど解読されやすくなるため、毎日の解除はパスキー（Windows Hello の PIN など）にして、パスコードは長めにするのがおすすめです。パスコードはどこにも保存されません。設定すると、忘れたときに使う「リカバリーキー」が表示されます。',
       fields:[{k:'p1', label:'新しいパスコード', ac:'new-password'}, {k:'p2', label:'もう一度入力', ac:'new-password'}],
       extra:WEAK_PASS_NOTE,
       validate: async v => {
@@ -2799,10 +2799,10 @@ async function rawFromPasskey(entries){
 }
 function passkeyErrorText(e){
   const detail = e ? `（詳細: ${e.name || 'Error'}${e.message ? ' - ' + String(e.message).slice(0, 120) : ''}）` : '';
-  if(e && e.name === 'NotAllowedError') return 'パスキーの操作がキャンセルされたか、保存先（パスワードマネージャー）で保存に失敗しました。保存先を聞かれたら「このPC」（Windows Hello）を選び、PINなどで最後まで認証してください（2回続けて求められることがあります）。保存先に「このPC」が出ず、Microsoft/Google のパスワードマネージャーになって失敗する場合は、Windows の「設定」→「アカウント」→「パスキー」→「詳細オプション」でそれらをオフにすると、「このPC」を選べるようになります。' + detail;
+  if(e && e.name === 'NotAllowedError') return 'パスキーの操作がキャンセルされたか、保存先（パスワードマネージャー）で保存に失敗しました。Windows では、「これはWindowsデバイスに保存されます。」と表示される保存先（Windows Hello）を選び、PINなどで最後まで認証してください（2回続けて求められることがあります）。この表示が出ず、Microsoft/Google のパスワードマネージャーになって失敗する場合は、Windows の「設定」→「アカウント」→「パスキー」→「詳細オプション」でそれらをオフにすると、Windows デバイスに保存できるようになります。' + detail;
   if(e && e.name === 'InvalidStateError') return 'この端末のパスキーはすでに登録されています。' + detail;
   if(e && e.name === 'NotSupportedError') return 'この端末・ブラウザはパスキーの作成に対応していません。Windows の「設定」→「アカウント」→「サインイン オプション」で PIN（Windows Hello）を設定してから、もう一度お試しください。' + detail;
-  if(e && (e.message === 'noprf' || e.message === 'nouh')) return 'このパスキーからは暗号化の鍵を取り出せませんでした。別の保存先（「このPC」＝Windows Hello、Googleパスワードマネージャー、スマホ）でお試しください。' + detail;
+  if(e && (e.message === 'noprf' || e.message === 'nouh')) return 'このパスキーからは暗号化の鍵を取り出せませんでした。別の保存先（Windows デバイス＝Windows Hello、Googleパスワードマネージャー、スマホ）でお試しください。' + detail;
   if(e && e.message === 'locked') return '登録中にロックされたため、パスキーを登録できませんでした。もう一度お試しください。';
   if(e && e.name === 'SecurityError') return 'このページではパスキーを使えません（HTTPSで公開したページで開いてください）。' + detail;
   return 'パスキーで確認できませんでした。' + detail;
@@ -2866,7 +2866,7 @@ async function passkeyDiagnostics(){
   const out = [];
   out.push(`ページ: ${location.protocol === 'https:' ? 'HTTPS ✓' : location.protocol + '（パスキーはHTTPSのページでのみ使えます）'}`);
   out.push(`パスキーの仕組み（WebAuthn）: ${window.PublicKeyCredential ? '対応 ✓' : '非対応 ✕'}`);
-  try{ out.push(`このPCの生体認証・PIN（Windows Hello）: ${await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable() ? '使える ✓' : '使えない ✕（Windows の「サインイン オプション」で PIN を設定してください）'}`); }catch(e){ out.push('この端末の生体認証・PIN: 確認できませんでした'); }
+  try{ out.push(`この端末の生体認証・PIN（Windows Hello）: ${await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable() ? '使える ✓' : '使えない ✕（Windows の「サインイン オプション」で PIN を設定してください）'}`); }catch(e){ out.push('この端末の生体認証・PIN: 確認できませんでした'); }
   try{
     if(PublicKeyCredential.getClientCapabilities){
       const c = await PublicKeyCredential.getClientCapabilities();
@@ -2886,7 +2886,7 @@ function renderPasskeyPart(){
   }
   const list = crypt.wraps.pk || [];
   return `<div class="pk-box"><h3>パスキー</h3>
-    <p class="small muted" style="margin:0 0 8px">パスコードの代わりに、「このPC」（Windows Hello の PIN・顔・指紋）やスマホの画面ロックで開けるようにします。パスコードとリカバリーキーは予備としてそのまま使えます。</p>
+    <p class="small muted" style="margin:0 0 8px">パスコードの代わりに、Windows Hello（PIN・顔・指紋）やスマホの画面ロックで開けるようにします。パスコードとリカバリーキーは予備としてそのまま使えます。</p>
     ${list.length ? `<ul class="pk-list">${list.map((p, i) => `<li><span><b>${esc(p.name)}</b><span class="small muted">　登録 ${esc(jpDate(p.created))}${p.mode === 'uh' ? '・互換方式' : ''}</span></span><button class="btn small danger" data-pk-del="${i}">削除</button></li>`).join('')}</ul>` : '<p class="small" style="margin:0 0 8px">まだ登録されていません。</p>'}
     ${list.some(p => p.mode === 'uh') ? '<p class="small muted" style="margin:0 0 8px">「互換方式」は、暗号化の鍵を取り出す機能（PRF）に対応していない端末向けの方式です。バックアップファイルやブラウザのデータだけを盗まれても解読はできませんが、PRF方式より一段弱くなります。</p>' : ''}
     <div class="row"><button class="btn" data-pa="pk-add">パスキーを登録</button>${list.length ? '<button class="btn" data-pa="pk-reset">パスキーで確認してパスコードを再設定</button>' : ''}<button class="btn small" data-pa="pk-diag">うまくいかないとき（診断）</button></div>
@@ -2923,7 +2923,7 @@ $('#protectBox').addEventListener('click', async e => {
     if(!ok || !raw) return;
     let failed = null, mode = null;
     // パスキー作成は「ボタンを押した直後」に呼ぶ必要があるため、確認ボタンのクリックの中で開始する
-    const started = await actionBox('「パスキーを作成」を押すと、パスキーの作成画面が表示されます。\n\n・Windows では、保存先を聞かれたら「このPC」を選び、PIN などで認証してください（Windows Hello に保存されます）。\n・スマホでは、画面ロック（指紋・顔・パスコード）で認証してください。\n\n端末によっては、確認のためにもう一度認証を求められます。',
+    const started = await actionBox('「パスキーを作成」を押すと、パスキーの作成画面が表示されます。\n\n・Windows では、「これはWindowsデバイスに保存されます。」と表示される保存先を選び、PIN などで認証してください（Windows Hello に保存されます）。\n・スマホでは、画面ロック（指紋・顔・パスコード）で認証してください。\n\n端末によっては、確認のためにもう一度認証を求められます。',
       'パスキーを作成', 'パスキーを作成', () => registerPasskey(raw, label).then(m => { mode = m; }).catch(err => { failed = err; }));
     if(started) await started.p;
     if(!started){ raw.fill(0); return; }
