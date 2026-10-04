@@ -484,7 +484,7 @@ dialog.wide{width:min(720px,calc(100vw - 32px))}
       </ul>
     </div>
   </section>
-  <p class="privacy-note">データはこの端末のブラウザ内にだけ保存されます　・　バージョン 1.7.0</p>
+  <p class="privacy-note">データはこの端末のブラウザ内にだけ保存されます　・　バージョン 1.8.0</p>
 </main>
 
 <section id="lockScreen" class="lock" hidden aria-labelledby="lockTitle">
@@ -880,10 +880,16 @@ async function createCrypt(pass){
   const key = await importDataKey(raw); raw.fill(0);
   return {crypt:{key, wraps}, rec};
 }
-function checkNewPass(p1, p2){
-  if(p1.length < 8) return 'パスコードは8文字以上にしてください。';
-  if(/^\d+$/.test(p1) && p1.length < 12) return '数字だけの場合は12桁以上にしてください（英字を混ぜるとより安全です）。';
+/** 新しいパスコードの確認。数字だけなら6桁以上、英字などを含むなら8文字以上。
+ *  数字だけで12桁未満は、データを盗まれたときに短時間で総当たりされうるため、危険性の確認（weakOk）を求める */
+const WEAK_PASS_NOTE = '数字だけのパスコードを使う（12桁未満は、バックアップファイルやPCのデータを盗まれた場合に短時間で解読されるおそれがあることを理解しました）';
+function isWeakPass(p){ return /^\d+$/.test(p) && p.length < 12; }
+function checkNewPass(p1, p2, weakOk){
+  if(/^\d+$/.test(p1)){
+    if(p1.length < 6) return '数字だけの場合は6桁以上にしてください。';
+  }else if(p1.length < 8) return '英字などを含む場合は8文字以上にしてください（数字だけなら6桁以上で設定できます）。';
   if(p1 !== p2) return '確認用のパスコードが一致しません。';
+  if(isWeakPass(p1) && !weakOk) return '数字だけで12桁未満のパスコードは解読されやすいため、下の確認にチェックを入れてください（毎日の解除はパスキーを使い、パスコードは長めにするのがおすすめです）。';
   return null;
 }
 /** 入力されたパスコードが、いまの保護のパスコードと一致するか */
@@ -2477,7 +2483,7 @@ $('#resetBtn').addEventListener('click', async () => {
 
 /* ===== パスコード保護 ===== */
 /** パスコード入力ダイアログ。validate が文字列を返したらエラーとして表示し、閉じない */
-function passPrompt({title, msg, fields, ack, ok = 'OK', validate}){
+function passPrompt({title, msg, fields, ack, extra, ok = 'OK', validate}){
   return new Promise(res => {
     const d = $('#passDlg'), form = $('#passForm'), body = $('#passBody');
     $('#passTitle').textContent = title;
@@ -2486,6 +2492,7 @@ function passPrompt({title, msg, fields, ack, ok = 'OK', validate}){
         <input type="${f.type === 'text' ? 'text' : 'password'}" ${f.type === 'text' ? '' : 'data-pw'} id="pf-${f.k}" data-k="${f.k}" value="${esc(f.value || '')}"
           autocomplete="${f.ac || 'off'}" ${f.type === 'text' ? 'autocapitalize="characters" spellcheck="false"' : ''}></div>`).join('') +
       (ack ? `<label class="ack"><input type="checkbox" id="pfAck"><span>${esc(ack)}</span></label>` : '') +
+      (extra ? `<label class="ack"><input type="checkbox" id="pfExtra"><span>${esc(extra)}</span></label>` : '') +
       (fields.some(f => f.type !== 'text') ? `<label class="ack muted"><input type="checkbox" id="pfShow"><span>入力中のパスコードを表示する</span></label>` : '') +
       `<p class="lock-err" id="pfErr" role="alert"></p>`;
     $('#passOk').textContent = ok;
@@ -2496,6 +2503,7 @@ function passPrompt({title, msg, fields, ack, ok = 'OK', validate}){
     form.onsubmit = async e => {
       e.preventDefault();
       const v = {}; $$('input[data-k]', body).forEach(i => v[i.dataset.k] = i.value);
+      v.__extra = !!(extra && $('#pfExtra') && $('#pfExtra').checked);
       if(fields.some(f => !v[f.k])){ err('すべての欄を入力してください。'); return; }
       if(ack && !$('#pfAck').checked){ err('確認のチェックを入れてください。'); return; }
       const okBtn = $('#passOk'); okBtn.disabled = true; okBtn.textContent = '確認中…'; err('');
@@ -2594,8 +2602,9 @@ $('#recoverBtn').addEventListener('click', async () => {
     msg:'保管しておいたリカバリーキーと、新しく使うパスコードを入力してください。',
     fields:[{k:'rec', label:'リカバリーキー（ハイフンは省略できます）', type:'text'},
             {k:'p1', label:'新しいパスコード', ac:'new-password'}, {k:'p2', label:'新しいパスコード（もう一度）', ac:'new-password'}],
+    extra:WEAK_PASS_NOTE,
     validate: async v => {
-      const m = checkNewPass(v.p1, v.p2); if(m) return m;
+      const m = checkNewPass(v.p1, v.p2, v.__extra); if(m) return m;
       let dec;
       try{ dec = await openEnvelope(env, v.rec, 'rec', true); }catch(err){ return 'リカバリーキーが違います。'; }
       try{
@@ -2680,10 +2689,11 @@ $('#protectBox').addEventListener('click', async e => {
     let recCode = null;
     const ok = await passPrompt({
       title:'パスコードを設定', ok:'設定する',
-      msg:'8文字以上で、英字と数字を混ぜるなど推測されにくいものにしてください。パスコードはどこにも保存されません。設定すると、パスコードを忘れたときに使う「リカバリーキー」が表示されます。',
+      msg:'数字だけなら6桁以上、英字を混ぜるなら8文字以上で設定できます。短い数字ほど解読されやすくなるため、毎日の解除はパスキー（Windows HelloのPINなど）にして、パスコードは長めにするのがおすすめです。パスコードはどこにも保存されません。設定すると、忘れたときに使う「リカバリーキー」が表示されます。',
       fields:[{k:'p1', label:'新しいパスコード', ac:'new-password'}, {k:'p2', label:'もう一度入力', ac:'new-password'}],
+      extra:WEAK_PASS_NOTE,
       validate: async v => {
-        const m = checkNewPass(v.p1, v.p2); if(m) return m;
+        const m = checkNewPass(v.p1, v.p2, v.__extra); if(m) return m;
         const r = await createCrypt(v.p1); crypt = r.crypt; recCode = r.rec; return null;
       }
     });
@@ -2698,8 +2708,9 @@ $('#protectBox').addEventListener('click', async e => {
     const ok = await passPrompt({
       title:'パスコードを変更', ok:'変更する',
       fields:[{k:'cur', label:'いまのパスコード', ac:'current-password'}, {k:'p1', label:'新しいパスコード', ac:'new-password'}, {k:'p2', label:'新しいパスコード（もう一度）', ac:'new-password'}],
+      extra:WEAK_PASS_NOTE,
       validate: async v => {
-        const m = checkNewPass(v.p1, v.p2); if(m) return m;
+        const m = checkNewPass(v.p1, v.p2, v.__extra); if(m) return m;
         try{ await rewrapPass(v.cur, v.p1); }catch(err){ return 'いまのパスコードが違います。'; }
         return null;
       }
@@ -2876,8 +2887,9 @@ $('#protectBox').addEventListener('click', async e => {
       title:'パスコードを再設定', ok:'設定する',
       msg:'パスキーで本人確認できました。新しいパスコードを入力してください。',
       fields:[{k:'p1', label:'新しいパスコード', ac:'new-password'}, {k:'p2', label:'新しいパスコード（もう一度）', ac:'new-password'}],
+      extra:WEAK_PASS_NOTE,
       validate: async v => {
-        const m = checkNewPass(v.p1, v.p2); if(m) return m;
+        const m = checkNewPass(v.p1, v.p2, v.__extra); if(m) return m;
         crypt = {key:crypt.key, wraps:{...crypt.wraps, pass:await wrapRaw(raw, v.p1)}}; return null;
       }
     });
