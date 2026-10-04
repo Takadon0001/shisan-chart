@@ -1,0 +1,2982 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- 安全対策: 外部ファイルの読み込みを禁止し、通信先を為替レートの配信元2か所だけに限定する（資産データは送らない） -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src https://api.frankfurter.dev https://latest.currency-api.pages.dev; font-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="資産チャート">
+<meta name="theme-color" content="#f3f2ee">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAiOklEQVR42u2deZRdVZX/9z7n3OFN9WpKKpVKVQYykpBAEmYiJEog2KAyiAK2PxSlRUXwJ9rLttG2/ekSXY0GJwQUFhiGNKiIiCAkQBgSQmJC5pCpKklVkprfeO895+zfH7eqqMTIlPtevVe5e2VlWrWSV+997ncP5+y9UUoPQgvtaMbCtyC0EI7QQjhCC+EILYQjtBCO0EI4QgvhCC2EI7QQjtBCOEILLYQjtBCO0EI4QgvhCC2EI7QQjtBCOEIL4QgthCO0EI7QQus3Eb4FANT/G+z7AwEAIIZwHFcQEPX/DID9qslMQAAiIAUAgvVR4qk+aDQRACAgIuDxBI04DmjQfQ6UmciP8kU63wmkgQkUcQBI5bWniCMmY9ynpP/nPrCk6scF+3AJ4SgvJjQAAAoUfDAEOteq0y2qazXJnOpYBVoBKdW7hRzXaDgnsuBPArx/f6TtxW2ZyigfV2syBoLhjAY7YuLUequhyhhRIZJRDuD/s1prkooAkOEwVBQxvJhQAAjc8j8nko7q3KzaV8mu9apzrU5tIqeLXOVLwEAsjgLIBXJ7/D+m8qozo6Si5g7Pl4u/rE8hgmAYt5kPzdR6a0q9NasxMq7WMA0OAEDkKSIixoYPJMMCDlJ+6IDcAACdOygPvuS1/FG2r9K928mVvldBBsAATf8X6Is8fK/BFGDfWyEYGhwNgQmO/U4FfY+iNBzqlfs6veVb0ghYEWFja8yZTfaHpsdnj41UxwUAAilXEiIyDOEYeqlgKCwA0E631/K4u/tR1f6SznaABuCAHNDyQ4d+X0MaQL+VoAAA8r54YiCyICACrY9MZxDAEGgKREQAUJq2HXDe2Jt7ZGX3yAoxq8leNLNiwbR4RZQDgJRaE/FyZkSUMRZooDAAQB5Y4e64z9v7lE7t9d0EGgyAAeiBHCSw/5j8XLcPl4iBUVMQUXdWPbU+/dT6dFOtcd7U+EdnV8wZHwHgWimpyxURUb5YkMy5by51dzzg7X8GFKAANHmfNvjyUHjT1AeK4JiMMgA40CPvW9H54Cvd50yOfmRO8qKZCcsQZYqIKLPYAgUKg2Te2Xavs+l21b4RENBEEL5OqCF7aQSKCABMgbYhNNHyLZlnN6XvboxcO6/qklMqTEMopbQmVj6IlAkcpAEAhXUYFn3xhB+QqlJ5pf2UJCIMAbe2Ojcv2f/bF7v6EeGe1ABQFoSUAxxaomEDgNfy59zr3xiEBQ2hVLzzq9YAQBETo5YYQOSWi0acNy0OQK6nS9/LsFIXDNJo2KpnS2b5J9JP/4vq2ogWR8GAVF/2UeJgEyhNEROrYmJrq/N/7mq56YF9uw55piE0gaZQOd4nGRKFDQTO5sW51/+T8r1osbeqGmVlftwaMREQH1vds3xL5v8uGvGps6tKXEJYiaYkWqKwVe+29NMXZFd8BVQv2rw/DSlX0wRaQ1VMOFJ/c2nrtXc172n3TEMoTRTC8a5jT0TDdnc9nH7iTK/laYwIQAStYFiYn9NWx8WzmzKXLd79l3U9piEQStHFsJJLVrkJSLlVN2We+wS5nWhz0BKAYBgZEUhFVVGedvQX7tv3/cfbCNDgqEoMEFZiQYZFuX3pp87Lr/spmhz48BGMo0qIwTFhs58/23HNnc2HUso0eEnxwUooXxW2bF+ZenyubH0ZIwJIAREMa/MTltqEWPlm9pKf7HqjJWcaQpYMH6xEvAkatrfvqczTi3S2DS0BWsJxY1JRRYQf7JXX3t2yYlvaMrjSIRxvaYblbLsz/dQi8rrQYMcVGQMuJmaxdF5f86vmpSu7TYOXgn6IUqh+OtvuzL74b2hwQCrrZPVYTGkwOHKGtzzcCgBXnF7leFIMaQlEDLk3GUSGHvZBxjuGIAwhZrEBPlxPcXYcupV+bxKScQQf2M/H0pVdpsGG0L+wIfQm3v6/hmQctQoywMfL2zPW0OUvbKi8iTy0Mrv8KhQMkEIy/pEPhmAbeOMD+9a3ZIcqf2FDUB3nps62ZZ69WOc7gcFxG4G+o38xBXZl1PW/3dveKw2BxZcPVuwTNWRAMvP8ZTpzCE0ekvH2+Uvc5q3d8ssP7FP68Avzww8O0gq4yL/2VW/3yxixhnFpPMD6WDLKXtia+fGTB4XgerjCQQCCCdRSjL3caJhDGQeQl0ybGPb3PJZcN6xUUB3jv1zW+df1vUU+fGFFuzPOEHuko7W2Rp1rX/A366QvkadAERy1gbXQKCAHFMAEIANkQAQkB4qVUhFDYAicIWcl0epoG/gf/9u6p90RghUND1bE9Ixdt+rBj750z8Fct2VVWmfcEZ3/INr15PrdZoV/+5EBCkAOROQpciTlJHmaXA+NCJqV/sWARIRXRnnWpbSjuzKyMyP91mqflSGpWGoC28CDKfVff2grZuc2FmE7pCJtCvPeHa98ac1Sk/HRdvL7sy6+ZMwsAvAye/MvfdZrfhpNAGSFiU8RkAEQKE0SAAHtKE9O51UnssQJvHouoMkSE9CqRhEDgKyrHY92HnKlhjcPOC0d3pZWZ8cht63bcxXZgtkmMkRNVOTwUDDoSKvbrqy/6qzq4lROCw6HJuKMN2c75z+32FHS4iIjXanV9RPP+Y9pH4xbcZdIbro9/9o3iCQaPNAoFQEZkCIPAIAlGoyGhaLhw7xmDouPG+wpiN6az8GZH3QcNnyhMy23tDortmWWb8lsb3PyHkUttAVTRUQEEZQGS8DjN40fU2MoRYWWsWLAYQjj+lVLluxZXWPGPNIcEQEPOakzasb/+OSPzq4ZKwHkgRfyK65TXdvR4n1tjIFg4QJaphh9oTXpM7zuXGZV9qGgPSDdV4zs+3ocPNmnr+0R+uZwGLzvCzyp1rXk/7im928bUy0dXsxmxUREMOzMyMtPTd5+dYMndXnD4TuUZW1bP7birqQRUYO8hoG8V+YNxv5rxoevn3gWIHedTnf1153N96ABwPj7v2WODEiTC2ia5oSrrRNv5tUnAQBpAu30JSbI3nOLLAEBCYaMMwA81Os9+Gr3g692tXR4cZuZghUnj+AMenP6/usb502Ju54uqHMpIBwEhIAe0MJld2zqaYsKSx8eUnBkinSXm71q7NzvnXRRXbTKA1A7H8y9+iWd63yfV36YIFciF+YJn3oLC+n0z3nCQMJDIjIFA2TtKW/JK91LXuna3+1VRrku/EkAY5B19NR667Ebxwk2SPvKCw5J2hLmw7tXX/fakhozJo8WbCIAR9bhZsfFqhfPvmz+qKkawOvZ4qz4rLf/ZbTZQC/kuxIMAMprMeq0yBk/FSPO6MfiPevEu9QS3Y9IW4/7wycOPbq6O2oWQ0J857L4moaPza0s6J0PfuuttxZINjgyV6uvrFna6WYF8n/2hmmguDB7vNyDe15PS+fcmnFmdBROuJoJLvctByIU4p35QA5Kk6LInFuj8+7l8bHk5YF04epsiMAQtQZP6coIv3BmclKd9fKbma6MipoFL0VoguYO9/JTk4Jh4cSjUHAoIkMYjzavvXPHS5VGRL1tb4EGMhg3uFh+cPsL7TtPrhw9OlaD9fPFiNN1+yqdakeDv4Mr8RSLjootWGpN/hxoAu0BE0UoXQ0gIpWe1hC94KTE5v3OtgNOzOKF8y8EYBu4u92bWGedOCbqKV2gUVMFgoMYMkfLr6z537eXjSNm58SFvTPd/ujedSOs2ClVDaJiEo7/OORaVPsbyAAYP0oDCxOUlaJubvzCZaLmFPLygAXxI++IiKd0TUJcOjfZlVEvbM3ELVbQepUvHpfNTRocgQpSRCwIHJLIEMaf9q7/xZsvvqNsHCEhEW66Wj++742d6Y6zq5sSkRocd7mIN8j9y8nNo3G4i0FOjjInXh497yEWqSMvD6woxdaj6heiUoCIH5qRsAW+uC1TuIoqAdgG293uTqu3pjYUSjwK8oRxQEX6oebXBTJ679mvQJY0Ikv2rL7oxV8va9tiApiTPxdb9JwYeRrlZd9piK8ZjrKmfTY2fykaVSRdYEN8X5oxICJP6i8vrPvBFfV5V2PBUCUgzvCx13uUJl4ubkWRNrixtrPlvzc+FTes99ckTEBxYbc5qaXNaxHgnJqxIjaGnfCvTKdk26sIBMKirGdOvDT2gd+RdIF0kV3J27gYRHClmjU2Xhllf1zbG7dZIeIPIrAM3HnQnT81PrralAUomLICvUMPNb/uaHksXleSinIjws3vbHjy4y/fuzN1wBSWddpPYgufxGiDTjli9GnRs35NSh42q7o0THB0PfnpedWfP6+6O1uocxCO4Eh6dHVPgeSJBa51BuMpN/dM25aoMNWxPTKaiIBGWImnWjdfuPxXv29ZK0jbYxbFP/yKPfOLsfOWolVTOppxRP2GIUilv3tZ/Yemx7uzWrBCpIQQMdnyLel0ThocA9cnFngGi4w/3bZ5V7rDZgYF0R0vSVWb0ZTM/+ur99+85rGUmzFijZGzfobRMSS9EiRjwL8Qgdb0w4+PbqwWOS942ScC22B72r3nNqeRMRU0HSzofw4J6A971wdebBXIq83YPTtfWbDsZ7tSB1F5WssSnzfOEKSiERXititHF6y9gADgz+t6iSjwhIUF7lO68pk1XS0RYQY7r8YXIYuLKDerrDgBw3IYMs4ZuJ4+e3L82nOqOjMqcOeiCWwT17fkuzPBexYW7Ok8MPZ6Z3NrvtdknAKeuIKKtIHs53M+XmlGFaly2WbBEKRSN184cnqDlXUDdi5EYHJs65F/b84DBty+ELzDfrJ1k6tV4NVBgdjt5a5smjOjqsGVLseyWUCGCEpT3OY3LKjNe8FfwmCIUtEzG1N9I95LEw6BzFHemq5mmxtBe1iUpCuNyA0T5xHpsltawRGlUotmJWY22mknYD40kGWwdS0511Mi0KSZBfcSNWO8Od25M91hMaEDHT3uy8YVjSdPStZ5SrJy21voi4dl8OvOrXEkBQu31mAK2NPutXR6jA1e9lA6cBAA4utdzd1eTgSq+Qjoka42ozdM/AARlemuG46olLpoVuKUsZFM0OIhGOvJqr835wGYDs6zBPwIbuhpJQo43GCIKS+/oG7ypGSdLEPZGBAPqcky+KVzknkv4LTTjzU278+XaCrLADXRxp5Wg3EK/gIAXtU0dyChLVPjiER60cxEfaVwVJCREwEZHLe25nWg1Q4WYIUj7eV3ZTpMzgOscCBgXsvxsZozaseTVmW9QA0RpKJRlcap46M5J8icVhMYHPd0eJm8CrDaERgcgNia6+m/2kMBPm1Z6c6vm1RhRjytyn1TpyYCwIUzEkRB3s8hAsGhK6MO9EhAKDE4CACxJdvV6+VFoA+332R7ft1UGBbGEYH0GSdEayuEF6hnEYipvN7X5QEglZhbAQDY1NsmA324/TxlhBU/KTkaCnB2MFRh6cikmDjSdLwgMy9ElIq2tDoAGJRyBxn556QbcMEcMa+8ifER9bFKqdTw2P6sNHHGZjVFXEnB1pEJIOfqkstW/G9yXfe+YFMVBuBpNT1Zz5FpGFYzgE4cbTMWZOrlJywb9uX95K7klEMWoEdeE42P1cAwWpuAgADUVGOYHANftBJsPxULLmCmwC+baCCLi+nJegAYNjvAGQIQja0xahPCU0GX0gPtx2RBFTm63ez21EGLG4Ff4+DDZzn84HseGPjFDsvAHQednmxgFzuCVA5JGgOVX0m61oyNj9UAEQ4XRPyEJR7hY2sNL+hDOKlLTDkGV/gDDzgsZiQMG4hweM2gNTjGLaaDPofC42h1qL86dpjON9Yl/22xcgjvQwvhOM7gwOMKDirMSZUcjiOwiUDqwvQplCAciPg+2qbfPtowGT/kpLelDgJjerhEHn402pOVOw46lhHwfXHBgmzlYcEcj2lVaUYnJUY6ygv2eEwDDdd9GwG3ESA4Hp0w0kpGA6utBakcPPiOK/S02pY+OJzK5/71hr2dXldG+UObgkWktJRjcGtCAd5K2pVuH1bRBgAA7O3yci5xLOnCKwtK/AFgVmWDpxUG+j4ajG/sbaP+g99hAQcB4Ob9jtRBln0R0FM0o8EGCOw8L8hnPSJMDLxCyo3tqYOd+ZQRfH/lUB28IRFt2JszOAb7HSFAxCy9piafiRMrRolAP0I/YdmX69ncc2B4JCx+qtKdkZv3B5yqEJHgOLXeAqCgbkWxoA6TgKgxWlVh2JKCvVKArlLPH9o+PGJSv/VrXXO+tVuagTbFS6KEzRqqDIDAzqFYYBdYiOojyWozKgPtf9cENhdPt212lGcgg+EQj+LTG1NSB3klFhGkgqoYr0sKCG5mbWBweFrFDXt8rMZVQXaXaNARYW7qPbChaz9jXJVztZQIDM7SOfnS9kzEDHIQD0PwFI2tMWI2D/ACUYCN1MQQpyfrg01Y/MGVeeU93LIGyvxKhyJCxpZtyew65NpGkCMG/VRlSr3tbwkq0YO3Gcl6xICDA0UUE9af929oz6dEOecsfp7y2OpuhgEP0vAbpKaNtku1VxYBiOZUNVUakWCPygjIZmJ3pvO+XSsZ42V6vUNpMARb+Wbm+S2ZhM2C3TAttU5G+clNNoAOsCAUYCM101o1xasnxGscHXAvvCJKGPZvdr7SXrYFD3+44J3LO3TQSw4YA1fC2FqjsdrQGhgryfK5JG1xY3ZVU155AU++KnPx6JONHQWRDQboeHpWY8Q0uFS6pC/7XFR/osm4Dvrh9sXjnp0vd+TTFjd0WYmHLxu/eDZ42fDryILj+dMTEPTyBBZswAVaz6luqrcr3KA74n3xaM2lvrr2USfohKigJjUYgj/4SteyzemKSMCygQiuolFJcXKTDRTwqMKg5zNpVWXHZlc15qQb7MUOhqiIPFIH8qmUm0WisrjooTWYApvbnduePBi3g9/gxBDyLs1stCtjwbdIscB71BDwo2NmQsBzJpmjZEY6X50y/4l5n6+JVIAwERFKmw9/BofS8PWHW3tyuhDjyX0/8uFZFYjBN1ey4CcbabVw1LTx8Zq89o7dsyCAQNbhZkfaiUfPue67My9mwvT278g+8D0gAs5LmQ9NYAjxoycPvrgtE7hD8X1K3tNja40F0+KkNS/l8dYDniVhRs4fNTUr3WN8uRwZARxy0p9omv23c2+YP2qKB+Cs+kvqR5/JPXFX9qEfIiBQicamUpNp8KUrO3+9vLM6xqWCQqzUyLn6vKnxeCR4n1Kw1gSiTzTNsZg4ls/NQJ6WjiT1P6dcetepn6yLVbnZ3vx930n//CbKptjIMbm//Cb3xK+ZYb2f9bMFNk+RZYiXt6dvebg1ajIqVD0eLIGXzU0W6MRaFABnJpU8ubpxQd3kp9u2HLGI+l3Gngh4wOk9bJ/59jXZe7+t9m7HeBWQBs9lyRHZP/wMk7WRD1ymPbdvR1JpaIZtijdasjc+sM82kGFBmtv81dTzp8VmNEakLMhq6oIohwLiyD7RNOd9tFYLZK5WKS//lcnzHz/nutk1Y10i55kH0j+6Th3Yg4kq0Ko/ziA0rMy938498wAaZl9uMNQRqNJgGWLFtvS1d7d0Z5UpsEBtjwioNF06J8kZFqgqWKCN1ASALukLl/98Y09rlJvvxr8gAEfe6WZG2Ykfn/yxSxpnEYDbdSB/33fctc9htAL+cXgzIgBSb4d9wadjn/pPIgLpAuNDFX4igBDikZWdX3+41TbQFKh0oYZ8ZF09td569MvjDA4FWh3KCrUFnXREmDdMnOdo+W4KHv2xZ+rC+mlPnXvDJY2zPID8a39Nf+8q9+/LMVEFgEcRBiIgwmRt/tklvT/5AvW0o2ENkpaiuhJDICB+//HWf3+kNWYxgxeKDB8OV9J159bYJpeB9+oXepc9ASGgR3TB8js29rS9vXgIZGnpmIzfPGXBLVPmAxdOLuX+/mf5v/0OuQDLBvVOsT7jlOlhtQ3xa79rTD+LtAblFUdClCZENATffcj5xiOtK7ZlqmOcoIB8DsjGYzeOEwwKt66cFW7ylSRtC+OGiR94G/FAQI6sw82ckBjxh3M+d8uJ5ysu8ns2ZW/7bO4vv8FIDAzrnckAAK0wnqTe9t7/uT6z5AfgZNCw/L8vaPVTE5gGNwS7/6XOj/5016qd2dq4CHb20lEDdl82LINLXcBNAYVSjrfEA2jhsjs29bRFhaUPT1s4Mk+rtMx/dsJZ352xKGHFXCD53EPZxxZTNoXRBKj3mKMiAyBKd/OmaZELrzVPX4SGRUqB9lcVY9BqwQBgxbbMr5d1LNucjtvM4EwVeOwGY5B1iiEbhYXDX0BsCnNZ29aPrbjriJxWIO/xcknD/n8zL7563KmE6HYdcB75sbPijxirAC7e/0PPOTk5cB0xbrp9/jXm6RehYREAeC4AvX9K+tZBICIwxgFoxbbM3c93vLAlowkqIlwX5bTHz2Dvv75x3pS462leyDvXhYXDP1A2hHH9qiVL9qyuMWMeaY4IBO1uesHIyYtnXzahok4CyA0vZe79tj60FxOVoI95shUyQCQnC54jJsw0z/gX89SFvLq+r79Bef2xbX9p5B9x6c+WgQgIgCEIE7QG0o6EZzamfr+658WtGUWQsBkiqKIk0YJhZ0Zefmry9qsbPBn8RrAhgIMz3pztnP/cYkd5FjdSngNA35h2/s2TzxXCdKXrPnlP7o+/QMbBirxnV/JuEHEdVjVSTJptnrJATJnLakYP9CH2MagkHFGp4wYgDD4b0j3tiltWPPbajszFt++OWCxuFQ+L/nVPYAl4/KbxY2oMVYD95MWGY8C53LvjlS+vWcqQTauo+8HMS+aPmqIBvLbduXu/7W18uS9ZLUTnge9HpEdOFohYRQ0bPUGMnyEap7LaBj5qHDCO8coj2lZ1uhuIdPs+1dmqWrbK5i1y62ux635gn7KgJ5372B0tbT2SMyxmyiwYdKTVbVfWX3VWtespXvgmHgHFWBXAPOl9esIZT+zfYDD+yzlXVNoJF0C++Fj2odsol8JkLShZqJY2/2SOc4wlAYC8vHxzrdy8ChgDYbCKGgDiI5vQjvWFDIiglGrdCVpTppucHGgFpgVOzlv/gjhlQWXcOHNi9P6XuqtjQhaLDsGhK6MXnhT/5JlVniwGGUVSjv7NGCzl5RPcYkI4qU7nwR86r/wJTRuEWdCE82jpc3+oQdr3YuS5h4sWomECIjDeVyxBANfBqrr4rUutWHzZpt5r796bKMDlnX9a8lKUsNijN45rLIpDKZ5y+B+IJkoKSyHLb1mVvf+/Vcs2TFQB6eKSMSjG7JM1AQDIjSOLjL4kEL318gxTH2zW29fQyefOHWeNrTVau6UpiuRZ8h4tvrp+bK3lepIzHG7TBBFAagWMeeuelzvWYdWIIalzH7UAD6RBH/6D/qGShQhaeeuekwCJKD97UjTn6iKM3hYcOjPqC/OrL5hZ4XqqaGQUe9QkIgMlo5ffbM75EPV2+U9t2ZjWaEa9TSt1JgUgzp+e4AwLPRVCcOzJ6g9MiX3topFSKobDeA4pIpAGxuOfv41V11EuHWQLThE0xjT1wWb95hoC9D1L4BuEj6h3pfOqvlLccU0DZ0BQ7PsqRf9skIH0WLI28aXFLF4J0isnPhBBa29tn2c5a2IBPYt/7loV43deO6a2QniSGB4PE4wZI9cR42fEr/8RuXnQumza57VG05ZbX9O5DIA4bUK0QCNlEEET5D1afE3DzMao4xUpdy2N8dack+sYJ54R/8z3KJ8p7PFRsJ5FmKp9P+17EwDPmmjXJYUb6JLHgfa4jKN/dGX9WZNijicFw+Ns9jnn5DnWvEvLjA/OwMl665ZJgLpKcer4SLDrg9kgMq44vcr19FCRMdSD8Rkn93A+Sj/+0BpN23tjhXIdAOP86Qkd3Ppg/yryABmOJzk7nrcm8MP5kN5Q3QB9LzmLrfZupz2bAfDsSYF5Fs7AUzSYjCHUjJJZqdHvXyq+dg/accpngJc2H4yBm/PWLw/QswiGGUfHbfbAvzVdcXql66khJ6Nk9q0wTq5jTD8zcfMvWeUIyqZKuj424Fk8F8BYOCNBx3b7W3DszamRFeK31zWeMzk+VLlJCS/j4Zw8R4ybnrz1YWPKqdTbAYxBac6WJALDVnu3066NAHjGBLs2/j4X0zMEhtCekqdPjD5+0/iTGiNuCXiTktzUxDh5LiZHJL52d+TDn6NsGpRboi6GM3BzcutKBTAyyafUW3nvPXsWwdBTlMrrL36w5oHrm0YkeJGPTsptjRdjIF0AiF55S+KLt6Mdp3QPcFFyWS4RCFNueU1pzbnxoelxT76HodKIIDh2ZVXcYr/8dMM3LxmFQJ6ikiKjJHe8+TfIPcecu7Dim78zZp1LqU7QqrQkRGs0I3LnemrdDcDOmxKtjHLv3V3uEAyVps60/OCJsUdvHLdoVtL1pH9LNVwA+O6O9xknz+F1TRU3/yr26e+AsCjVXVpRiOCU6ZEbXlAA40caMxvtnPsOd8EZAmPQlZGWYN+/ov63n2saW2v49zMw3A75nkMQ6ZJ07QWfTH5riXX2JZRNk5sDxksCESIQhrvueaU1Y+KDb+tZGAJnmHMpldOXzk3+/ivjPnV2tSe1J0vOlQzBNcFj03Dlt6+561/MPfoTuXsjGCZa0b5LOkM85B4S33rYapiwoy3zkZ8263/IaBkCImYd7Ug9szFyy0UjzpsWByDX06WMRVGvCR67hACBOXOeMe10d+Wf88888BYiQEM2eUFw6u2UG14QDRPGjzROarRf3ZEdGDPKGCD4WKiZjZFr51VdckqFaTBP6sD3bR3HyjG4OZUx5II8x135ZB8inKMdA2RAutiXDhmjXEZMPTX2tXtMBr95vuPW3x/we2U1UTqvlaZBWHCllNbEWNmMySwrOPq9DDCBnJObd19/xnn1CW/jK+C5aNlg2P29CFREz4Lxbz1kN0x4Y0/q8p+3IELWJZPjOZOjH5mTvGhmwjK4Vkpq4qzMtj4IKDtj3M91gRvWmRdbZ17sbV/rvvqE98aL6mALAKAVAW70XYsodFAiBGV69Z6NumHC5Hpz3AizM60+flriI7Mr5oyPADCtlJ+PlB0Z5akcR6gIMhQGAOhsr7fuBff1p+WuN3TXIVASDBMNq/+Yl45yofz9XcVB7Is7tSLlUU+7edqixFfvZKS2tXkjK0RV3AAgKbUmKkcmhgscA7EIEAgDkQGA7u2UO9e5a5ep3RvUwRbKpgAIuEBhAveblBBw0HSVf0bMQPWhb4UMgVagFEkXlARAjCb4yEY+boY5+4PGiWcCY5wjELhSIyIr/1WnwwKOtzpQNACCYfj1BvJcfWCP3L1B7t2u9m5TB/ZQppdyKVDKx+Ww5jY6vMeGiPyRDQA+CsA5RhIYq+B1Y/mYyWLMJDFuBqsb68+qIyWhfywYDpMNuMMJjiMpAeACB10d0pke3dOu2/erfdvIyas9m0gr0Fq17gStDvtIiYBxXj8BGEPG+dgT0bJ5w2RWO5ola1ksOagPV/WhwxgMOxuOcBzZRU19RzZcHHUDtM70gNYwsFnL/w1jgyEYvL71rXkNiIBsGL95wx2OI9tfB8WkA6D4jbID93Wonw/lHRmU+KHosHEbwzCVPabVyEc7/fhn42IGVAHh+DQBoSGG70G5ncqGFsIRWghHaCEcoYVwhBbCEVoIR2ihhXCEFsIRWghHaCEcoYVwhBbCEVoIR2ghHKGFcIQWwhFaaCEcoYVwhBbCEVoIR2jFtv8PV9cExuDUG/MAAAAASUVORK5CYII=">
+<link rel="icon" href="data:image/png;base64,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">
+<title>資産分散チャート</title>
+<meta name="description" content="保有資産を円グラフで見える化し、目標配分との差やリバランス額を計算する、ブラウザだけで動く無料ツール">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f3f2ee; --surface:#fcfcfb; --surface2:#f0efec;
+  --ink:#0b0b0b; --ink2:#52514e; --muted:#6b6a65; --axis-ink:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.12);
+  --accent:#2a78d6; --accent-ink:#ffffff; --accent-soft:#e6effb;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948;
+  --gray:#8f8d86; --gray2:#cfcdc4;
+  --good:#0ca30c; --good-ink:#006300; --warn:#fab219; --warn-ink:#8a5a00; --crit:#d03b3b; --crit-ink:#b42828;
+  --shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0d0d0d; --surface:#1a1a19; --surface2:#242422;
+    --ink:#ffffff; --ink2:#c3c2b7; --muted:#a3a198; --axis-ink:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.12);
+    --accent:#3987e5; --accent-ink:#ffffff; --accent-soft:#1c2a3d;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+    --gray:#7a7872; --gray2:#4a4945;
+    --good-ink:#0ca30c; --warn-ink:#fab219; --crit-ink:#e66767;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0d0d0d; --surface:#1a1a19; --surface2:#242422;
+  --ink:#ffffff; --ink2:#c3c2b7; --muted:#a3a198; --axis-ink:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.12);
+  --accent:#3987e5; --accent-ink:#ffffff; --accent-soft:#1c2a3d;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+  --gray:#7a7872; --gray2:#4a4945;
+  --good-ink:#0ca30c; --warn-ink:#fab219; --crit-ink:#e66767;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;
+  font-size:15px; line-height:1.6;
+}
+button,input,select{font:inherit;color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px 64px}
+header.top{
+  position:sticky;top:0;z-index:20;background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.top-inner{max-width:1080px;margin:0 auto;padding:10px 16px 0;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.top h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.02em;flex:1 1 auto}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;width:100%;margin-top:4px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;border:0;background:none;padding:10px 14px;cursor:pointer;color:var(--ink2);
+  border-bottom:2px solid transparent;font-weight:600;font-size:14px;white-space:nowrap;
+}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab:focus-visible,.btn:focus-visible,.seg button:focus-visible,.lg-row:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel{display:none;padding-top:16px}
+.panel.active{display:block}
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:16px;margin-bottom:16px;box-shadow:var(--shadow);min-width:0;
+}
+.card h2{font-size:16px;margin:0 0 4px}
+.card .sub{color:var(--muted);font-size:13px;margin:0 0 12px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  border:1px solid var(--border);background:var(--surface);border-radius:8px;
+  padding:8px 12px;cursor:pointer;font-size:14px;min-height:38px;white-space:nowrap;
+}
+.btn:hover{background:var(--surface2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn.danger{color:var(--crit-ink)}
+.btn.small{padding:4px 10px;min-height:32px;font-size:13px}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.spacer{flex:1}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.num{font-variant-numeric:tabular-nums}
+
+/* summary tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);min-width:0}
+.tile .lbl{font-size:13px;color:var(--ink2);margin-bottom:2px}
+.tile .val{font-size:26px;font-weight:700;line-height:1.25;word-break:break-all}
+.tile .val.md{font-size:20px}
+.tile .note{font-size:12px;color:var(--muted);margin-top:4px}
+.meter{display:flex;height:10px;gap:2px;margin:8px 0 6px;border-radius:5px;overflow:hidden}
+.meter span{display:block;height:100%}
+.meter-legend{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--ink2)}
+.meter-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.pos{color:var(--good-ink)} .neg{color:var(--crit-ink)}
+
+/* dim selector */
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;background:var(--surface2);padding:4px;border-radius:10px}
+.seg button{border:0;background:none;padding:6px 12px;border-radius:7px;cursor:pointer;font-size:14px;color:var(--ink2);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 0 0 1px var(--border)}
+.dimbar{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin:-4px 0 12px}
+.dimbar::-webkit-scrollbar{display:none}
+.dimbar .seg{flex-wrap:nowrap}
+
+/* donut + legend */
+.chart-grid{display:grid;grid-template-columns:1fr;gap:16px;align-items:start}
+@media (min-width:760px){.chart-grid{grid-template-columns:minmax(260px,360px) 1fr}}
+.donut-box{position:relative;max-width:340px;width:100%;margin:0 auto}
+.donut-box svg{display:block;width:100%;height:auto}
+.donut-box path{cursor:pointer;transition:opacity .15s}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center;padding:0 22%}
+.donut-center .c-lbl{font-size:13px;color:var(--ink2);line-height:1.3}
+.donut-center .c-val{font-size:22px;font-weight:700;line-height:1.3;word-break:break-all}
+.donut-center .c-pct{font-size:14px;color:var(--ink2)}
+.legend{width:100%;border-collapse:collapse;font-size:14px}
+.legend th{font-weight:600;color:var(--muted);font-size:12px;text-align:right;padding:4px 6px;border-bottom:1px solid var(--grid)}
+.legend th:first-child{text-align:left}
+.legend td{padding:7px 6px;border-bottom:1px solid var(--grid);text-align:right;white-space:nowrap}
+.legend td:first-child{text-align:left;white-space:normal}
+.legend tr.lg-row{cursor:pointer}
+.legend tr.lg-row:hover td{background:var(--surface2)}
+.legend tr.lg-row.sel td{background:var(--accent-soft)}
+.legend tr.lg-row.dim td{opacity:.45}
+.legend tfoot td{font-weight:700;border-bottom:0}
+.chip{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px;vertical-align:-1px;flex:0 0 auto}
+.status{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:600}
+.status.ok{color:var(--good-ink)} .status.over,.status.under{color:var(--warn-ink)}
+.drill{margin-top:12px;border-top:1px solid var(--grid);padding-top:12px}
+.drill h3{font-size:14px;margin:0 0 8px}
+.drill ul{list-style:none;margin:0;padding:0}
+.drill li{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed var(--grid);font-size:14px}
+.drill li:last-child{border-bottom:0}
+.drill li span:last-child{white-space:nowrap}
+
+/* bar list */
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;font-size:14px}
+.bar-row .bn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-row .bv{text-align:right;white-space:nowrap}
+.bar-track{grid-column:1 / -1;height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:0 4px 4px 0}
+
+/* holdings editor */
+.hlist{display:flex;flex-direction:column;gap:8px}
+details.hcard{border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+details.hcard[open]{box-shadow:0 0 0 1px var(--accent)}
+details.hcard summary{list-style:none;cursor:pointer;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center}
+details.hcard summary::-webkit-details-marker{display:none}
+.hs-name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hs-meta{grid-column:2;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hs-val{grid-row:1 / span 2;grid-column:3;text-align:right;white-space:nowrap}
+.hs-val b{display:block;font-size:15px}
+.hs-val small{color:var(--muted);font-size:12px}
+.hs-chip{grid-row:1 / span 2;width:10px;height:36px;border-radius:3px}
+.hbody{padding:4px 12px 14px;border-top:1px solid var(--grid)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 12px;margin-top:10px}
+.field{display:flex;flex-direction:column;gap:3px;min-width:0}
+.field.wide{grid-column:1 / -1}
+.field label,.field .flbl{font-size:12px;color:var(--ink2);font-weight:600}
+.field .hint{font-size:12px;color:var(--muted)}
+input[type=text],input[type=number],input[type=date],input[type=password],select{
+  width:100%;min-width:0;border:1px solid var(--border);background:var(--surface);
+  border-radius:8px;padding:8px 10px;min-height:40px;font-size:16px;
+}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+input:disabled,select:disabled{opacity:.55}
+.calc{font-size:14px;padding:8px 0}
+.hactions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.empty{padding:28px 12px;text-align:center;color:var(--muted)}
+.empty p{margin:0 0 12px}
+
+/* tables generic */
+.tbl-wrap{overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{font-weight:600;color:var(--muted);font-size:12px;padding:6px 8px;border-bottom:1px solid var(--grid);text-align:right;white-space:nowrap}
+.tbl td{padding:7px 8px;border-bottom:1px solid var(--grid);text-align:right;white-space:nowrap}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl tfoot td{font-weight:700;border-bottom:0}
+.tbl input{max-width:90px;min-width:56px;text-align:right;min-height:34px;padding:4px 8px}
+.buy{color:var(--good-ink);font-weight:700}
+.sell{color:var(--crit-ink);font-weight:700}
+.grid2{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:860px){.grid2{grid-template-columns:1fr 1fr}}
+.alert{border-radius:8px;padding:8px 12px;font-size:13px;margin:8px 0;background:var(--surface2);border-left:3px solid var(--warn)}
+.info{border-radius:8px;padding:10px 12px;font-size:13px;background:var(--surface2);color:var(--ink2);margin:8px 0}
+
+/* history chart */
+.hchart{width:100%;overflow:hidden}
+.hchart svg{display:block;width:100%}
+.hlegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--ink2);margin-top:8px}
+
+/* tooltip */
+#tip{
+  position:fixed;z-index:50;pointer-events:none;background:var(--surface);color:var(--ink);
+  border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;
+  box-shadow:0 4px 18px rgba(0,0,0,.18);max-width:260px;display:none;line-height:1.5
+}
+#tip .t-title{font-weight:700;margin-bottom:2px}
+#tip .t-row{display:flex;justify-content:space-between;gap:12px}
+
+/* dialogs */
+dialog{border:1px solid var(--border);border-radius:14px;background:var(--surface);color:var(--ink);padding:0;width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 48px)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.dlg-body{padding:16px;overflow:auto;max-height:calc(100vh - 140px)}
+.dlg-head{padding:14px 16px;border-bottom:1px solid var(--grid);font-weight:700}
+.dlg-foot{padding:12px 16px;border-top:1px solid var(--grid);display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+dialog.wide{width:min(720px,calc(100vw - 32px))}
+.bulk-row{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:4px 12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--grid)}
+.bulk-row:last-child{border-bottom:0}
+.bulk-row .b-name{font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis}
+.bulk-row .b-meta{grid-column:1 / -1;font-size:12px;color:var(--muted)}
+.bulk-row input{text-align:right}
+.bulk-row .b-lbl{font-size:11px;color:var(--ink2);display:block;text-align:right}
+.notice{border-left:3px solid var(--warn)}
+.ab-box h3{font-size:15px;margin:0 0 4px}
+.pk-box{margin-top:16px;padding-top:12px;border-top:1px solid var(--grid)}
+.pk-box h3{font-size:15px;margin:0 0 4px}
+.pk-list{list-style:none;margin:0 0 8px;padding:0}
+.pk-list li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--grid)}
+.rk-list{border-top:1px solid var(--grid)}
+.rk-item{padding:8px 0;border-bottom:1px solid var(--grid)}
+.rk-top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.rk-name{font-weight:600;font-size:14px;min-width:0}
+.rk-val{white-space:nowrap;font-size:14px}
+.kabu-link{font-size:12px;margin-left:6px;color:var(--accent);white-space:nowrap}
+.tag-warn{display:inline-block;font-size:11px;font-weight:700;color:var(--warn-ink);border:1px solid var(--warn);border-radius:4px;padding:0 4px;margin-left:4px}
+@media (max-width:560px){ .bulk-row{grid-template-columns:minmax(0,1fr) 120px} }
+.split-row{display:grid;grid-template-columns:1fr 1fr 80px 36px;gap:6px;margin-bottom:6px;align-items:center}
+.split-row input{text-align:right}
+.iconbtn{border:0;background:none;cursor:pointer;font-size:18px;color:var(--muted);min-height:36px}
+
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-size:14px;z-index:60;display:none;max-width:calc(100vw - 32px)}
+[hidden]{display:none!important}
+.lock{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
+.lock-box{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px 20px;text-align:center;box-shadow:var(--shadow)}
+.lock-box h1{font-size:18px;margin:8px 0 4px}
+.lock-box form{text-align:left;margin-top:16px;display:flex;flex-direction:column;gap:4px}
+.lock-err{color:var(--crit-ink);font-size:13px;min-height:1.4em;margin:2px 0 6px}
+.lock-alt{display:flex;flex-direction:column;align-items:center;gap:0;margin-top:14px;border-top:1px solid var(--grid);padding-top:10px}
+.lock-alt .linkbtn{margin-top:2px}
+.reccode{font-family:ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;font-size:19px;font-weight:700;letter-spacing:.04em;text-align:center;
+  background:var(--surface2);border:1px dashed var(--axis);border-radius:10px;padding:14px 8px;word-break:break-all;user-select:all}
+.linkbtn{border:0;background:none;color:var(--accent);cursor:pointer;margin-top:12px;font-size:13px;text-decoration:underline;padding:6px}
+.ack{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin:8px 0;cursor:pointer}
+.ack input{margin-top:3px;flex:0 0 auto}
+.privacy-note{font-size:12px;color:var(--muted);text-align:center;margin:24px 0 0}
+.sp-only{display:none}
+.lg-name{display:inline-flex;align-items:center}
+.lg-sub{display:none}
+@media (max-width:560px){
+  .pc-only{display:none}
+  .tab{padding:10px 10px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .tile{padding:12px}
+  .tile-total{grid-column:1 / -1}
+  .tile .val{font-size:24px}
+  .tile .val.md{font-size:17px}
+  .tile .note.ex{display:none}
+  .meter-legend{flex-direction:column;gap:0}
+  .col-amt{display:none}
+  .sp-only.lg-sub{display:block;margin-left:20px}
+  .legend td:first-child{white-space:nowrap}
+  .legend td,.legend th{padding:7px 4px}
+  .legend .pt{display:block}
+  .tbl td,.tbl th{padding:6px 4px}
+  .tbl input{max-width:64px}
+  .card{padding:14px 12px}
+}
+@media print{
+  header.top .tabs,.btn,.dimbar{display:none!important}
+  .panel{display:block!important}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <h1>資産分散チャート</h1>
+    <button class="btn small" id="lockBtn" hidden title="すぐにロックして、パスコードを入れるまで表示しないようにします">ロック</button>
+    <button class="btn small" id="hideBtn" aria-pressed="false" title="金額を「••••」で隠します（画面共有・SNS投稿用）">金額を隠す</button>
+    <nav class="tabs" role="tablist" aria-label="画面切り替え">
+      <button class="tab" role="tab" data-tab="chart" aria-selected="true">グラフ</button>
+      <button class="tab" role="tab" data-tab="input" aria-selected="false">資産入力</button>
+      <button class="tab" role="tab" data-tab="target" aria-selected="false"><span class="pc-only">目標・</span>リバランス</button>
+      <button class="tab" role="tab" data-tab="history" aria-selected="false">推移</button>
+      <button class="tab" role="tab" data-tab="settings" aria-selected="false">設定<span class="pc-only">・データ</span></button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- グラフ -->
+  <section class="panel active" id="panel-chart" role="tabpanel">
+    <div id="noticeBanner"></div>
+    <div id="fxBanner"></div>
+    <div class="tiles" id="tiles"></div>
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
+        <h2 style="margin:0">資産の内訳</h2>
+        <span class="spacer"></span>
+        <button class="btn small" id="pngBtn">画像で保存</button>
+      </div>
+      <div class="dimbar"><div class="seg" id="dimSeg" role="group" aria-label="分類の切り替え"></div></div>
+      <div id="chartArea"></div>
+    </div>
+  </section>
+
+  <!-- 資産入力 -->
+  <section class="panel" id="panel-input" role="tabpanel">
+    <div class="card">
+      <div class="row" style="margin-bottom:4px">
+        <h2 style="margin:0">保有資産</h2>
+        <span class="spacer"></span>
+        <button class="btn small" id="bulkBtn">単価・評価額をまとめて更新</button>
+        <button class="btn small" id="rakutenBtn">楽天証券のCSVを取り込む</button>
+        <input type="file" id="importRakuten" accept=".csv,text/csv" hidden>
+        <button class="btn small" id="sortBtn">評価額の大きい順に並べる</button>
+        <button class="btn primary" id="addBtn">＋ 資産を追加</button>
+      </div>
+      <p class="sub">行をタップすると編集できます。入力内容は自動で保存されます。投資信託・バランスファンドは「内訳を設定」で複数の資産クラス・地域に按分できます。</p>
+      <div class="hlist" id="hlist"></div>
+    </div>
+  </section>
+
+  <!-- 目標・リバランス -->
+  <section class="panel" id="panel-target" role="tabpanel">
+    <div class="card">
+      <h2>目標配分</h2>
+      <p class="sub">目標の比率（%）を入力します。<b>空欄の区分はリバランス計算の対象外</b>です（自宅などの不動産や保険など、売り買いしにくい資産は空欄にしてください）。</p>
+      <div class="row" style="margin-bottom:12px">
+        <label class="small" for="threshold">許容する乖離幅</label>
+        <input type="number" id="threshold" min="0" max="50" step="0.5" style="width:90px">
+        <span class="small muted">ポイント（例: 5 → 目標30%なら25〜35%を範囲内とみなします）</span>
+      </div>
+      <div class="grid2" id="targetTables"></div>
+    </div>
+    <div class="card">
+      <h2>リバランス計算</h2>
+      <p class="sub">目標配分に近づけるために、どの区分をいくら買う（売る）かを計算します。</p>
+      <div class="fgrid" style="margin-top:0">
+        <div class="field">
+          <span class="flbl">基準にする分類</span>
+          <div class="seg" id="rbAxis" role="group" aria-label="基準にする分類">
+            <button data-v="cls" aria-pressed="true">資産クラス</button>
+            <button data-v="reg" aria-pressed="false">地域</button>
+          </div>
+        </div>
+        <div class="field">
+          <span class="flbl">方法</span>
+          <div class="seg" id="rbMode" role="group" aria-label="リバランスの方法">
+            <button data-v="add" aria-pressed="true">買い増しのみ</button>
+            <button data-v="trade" aria-pressed="false">売買で調整</button>
+            <button data-v="withdraw" aria-pressed="false">取り崩しのみ</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="rbAmount" id="rbAmountLbl">追加で投資する金額（円）</label>
+          <input type="text" inputmode="numeric" id="rbAmount" placeholder="例: 300,000">
+        </div>
+      </div>
+      <p class="small muted" id="rbModeNote"></p>
+      <div id="rbResult"></div>
+    </div>
+  </section>
+
+  <!-- 推移 -->
+  <section class="panel" id="panel-history" role="tabpanel">
+    <div class="card">
+      <div class="row" style="margin-bottom:4px">
+        <h2 style="margin:0">資産の推移</h2>
+        <span class="spacer"></span>
+        <button class="btn primary" id="snapBtn">今日の状態を記録</button>
+      </div>
+      <p class="sub" id="snapInfo">月に1回など、決まったタイミングで記録すると推移がわかります。同じ日に記録した場合は上書きされます。</p>
+      <div class="row" style="margin-bottom:12px">
+        <div class="seg" id="hsAxis" role="group" aria-label="推移の分類">
+          <button data-v="cls" aria-pressed="true">資産クラス</button>
+          <button data-v="reg" aria-pressed="false">地域</button>
+        </div>
+        <div class="seg" id="hsMode" role="group" aria-label="推移の表示単位">
+          <button data-v="amount" aria-pressed="true">金額</button>
+          <button data-v="ratio" aria-pressed="false">構成比</button>
+        </div>
+      </div>
+      <div class="hchart" id="hchart"></div>
+      <div class="hlegend" id="hlegend"></div>
+    </div>
+    <div class="card">
+      <h2>記録の一覧</h2>
+      <div class="tbl-wrap" id="snapTable"></div>
+    </div>
+  </section>
+
+  <!-- 設定 -->
+  <section class="panel" id="panel-settings" role="tabpanel">
+    <div class="card">
+      <h2>為替レート</h2>
+      <p class="sub">外貨建て資産を円に換算するためのレートです（1単位あたりの円）。</p>
+      <div class="row" style="margin-bottom:4px">
+        <button class="btn primary" id="fxFetch">最新のレート・価格を取得</button>
+        <span class="small" id="fxStatus" role="status"></span>
+      </div>
+      <label class="ack"><input type="checkbox" id="fxAuto"><span>開いたときに自動で取得する（6時間に1回まで。価格を自動取得にした暗号資産・金なども一緒に更新）</span></label>
+      <div class="fgrid" id="rateGrid"></div>
+      <p class="small" id="rateUpdated"></p>
+      <p class="small muted" style="margin-bottom:0">取得先: <b>Frankfurter</b>（欧州中央銀行などの公表レート。平日に1回更新）。つながらないときは <b>Currency API</b>（市場レート。毎日更新）。どちらも無料・登録不要です。送るのは「どの通貨のレートか」だけで、資産のデータは送りません。「その他の外貨」は手入力してください。値を手で直した場合、次の自動取得で上書きされます。</p>
+    </div>
+    <div class="card">
+      <h2>表示</h2>
+      <div class="row">
+        <span class="small">配色</span>
+        <div class="seg" id="themeSeg" role="group" aria-label="配色">
+          <button data-v="auto" aria-pressed="true">端末に合わせる</button>
+          <button data-v="light" aria-pressed="false">ライト</button>
+          <button data-v="dark" aria-pressed="false">ダーク</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>パスコード保護（暗号化）</h2>
+      <p class="sub">オンにすると、ブラウザ内のデータをパスコードで暗号化して保存します。開くたびにパスコードが必要になり、PCを使える人やほかのファイルからは中身を読めなくなります。</p>
+      <div id="protectBox"></div>
+    </div>
+    <div class="card">
+      <h2>自動バックアップ</h2>
+      <p class="sub">起動するたびに自動でバックアップを残します。パスコード保護中は、すべて暗号化された状態で保存されます。</p>
+      <div id="autoBackupBox" class="ab-box"></div>
+    </div>
+    <div class="card">
+      <h2>データの保存・読み込み</h2>
+      <div class="info">データはこのブラウザの中（ローカルストレージ）にだけ保存され、インターネットには送信されません。ブラウザの履歴やサイトデータを消すとデータも消えるため、<b>定期的に「バックアップを保存」してください</b>。別の端末に移すときも、このバックアップファイルを使います。</div>
+      <p class="small" id="lastBackupInfo" style="margin:8px 0 0"></p>
+      <p class="small muted" id="persistStatus" style="margin:4px 0 0"></p>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" id="exportJson">バックアップを保存（JSON）</button>
+        <button class="btn" id="exportJsonPlain" hidden>暗号化せずに保存</button>
+        <button class="btn" id="importJsonBtn">バックアップから復元</button>
+        <input type="file" id="importJson" accept=".json,.txt,application/json,text/plain" hidden>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="exportCsv">CSVで書き出す（Excel用）</button>
+        <button class="btn" id="importCsvBtn">CSVから読み込む</button>
+        <input type="file" id="importCsv" accept=".csv,text/csv" hidden>
+      </div>
+      <p class="small muted">楽天証券の保有商品一覧CSVは「資産入力」の「楽天証券のCSVを取り込む」から読み込めます。<br>このツール形式のCSVの列: 名称, 入力方法, 評価額, 数量, 単価, 通貨, 資産クラス, 地域, 金融機関, 口座区分, 取得額(円), 内訳, 銘柄コード, 価格の自動取得。まず「CSVで書き出す」で形式を確認してから編集すると確実です。</p>
+      <div class="row" style="margin-top:16px">
+        <button class="btn" id="sampleBtn">サンプルデータを入れる</button>
+        <button class="btn danger" id="resetBtn">すべてのデータを削除</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>このツールについて</h2>
+      <ul class="small" style="margin:0;padding-left:1.2em;color:var(--ink2)">
+        <li>HTMLファイル1つで動き、APIキーや有料サービスは使いません（無料）。</li>
+        <li>通信するのは、為替レートや暗号資産・金の価格を取得するときに、公開の配信サービス（Frankfurter / Currency API）へ問い合わせる場合だけです。送るのは通貨・銘柄の種類だけで、資産のデータは送りません。それ以外の通信は、ブラウザの機能（CSP）で遮断しています。</li>
+        <li>株・投資信託の価格は自動取得しません（株探・Yahoo!ファイナンスなどは自動取得を禁止しているため）。「株探で見る」リンクは、ページを開いて自分の目で確認するためのものです。楽天証券の保有商品一覧CSVを取り込むと、評価額をまとめて更新できます。</li>
+        <li>金・銀・プラチナの価格は国際価格（1トロイオンス＝31.1035グラム）から計算した目安で、国内の店頭価格（税込み・手数料込み）とは差があります。</li>
+        <li>「安全資産」＝円建ての現金・預金と日本の債券（個人向け国債など）として計算しています。</li>
+        <li>「円資産」＝円建てで、かつ地域が日本の資産です。円建ての投資信託でも、中身が海外資産なら「外貨・海外資産」に数えます。</li>
+        <li>投資信託の内訳プリセット（全世界株式など）は<b>目安の比率</b>です。正確な比率は各ファンドの月次レポートで確認してください。</li>
+        <li>NISA枠の使用額は、いま保有している分の取得額から計算した<b>目安</b>です。売却した枠の復活は反映されません。</li>
+        <li>パスコード保護は、ブラウザ標準の暗号化機能（Web Crypto）を使っています。データはランダムなデータ鍵を使ってAES-256-GCMで暗号化します。そのデータ鍵を、パスコードとリカバリーキーからそれぞれ作った鍵（PBKDF2-SHA256・60万回）で包んで保存します。パスコードとリカバリーキー自体はどこにも保存しません。パスキーを登録すると、パスキーのPRF拡張で得た値（HKDF-SHA256）でも同じデータ鍵を包みます。パスキーはHTTPSで公開したページでだけ使えます。</li>
+        <li>このファイルが書き換えられていないかは、配布元が公開している「SHA-256ハッシュ値」（ファイルの中身から計算される64文字の照合用の文字列）と照らし合わせて確認できます。指紋認証などの生体認証は使いません（手順は配布元の説明を参照）。</li>
+        <li>自動バックアップの保存先フォルダの情報は、このブラウザの IndexedDB に保存します（ファイルの中身ではありません）。</li>
+        <li>このツールは投資助言を行うものではありません。</li>
+      </ul>
+    </div>
+  </section>
+  <p class="privacy-note">データはこの端末のブラウザ内にだけ保存されます　・　バージョン 1.7.0</p>
+</main>
+
+<section id="lockScreen" class="lock" hidden aria-labelledby="lockTitle">
+  <div class="lock-box">
+    <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true" style="color:var(--accent)"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 1 1 6 0v3H9Zm3 4a1.5 1.5 0 0 1 .75 2.8V18h-1.5v-1.2A1.5 1.5 0 0 1 12 14Z"/></svg>
+    <h1 id="lockTitle">資産分散チャート</h1>
+    <p class="small muted" style="margin:0">データは暗号化して保護されています。</p>
+    <button class="btn primary" type="button" id="passkeyBtn" hidden style="width:100%;margin-top:16px">パスキーで開く</button>
+    <form id="unlockForm" autocomplete="off">
+      <label for="unlockPass" class="flbl">パスコード</label>
+      <input type="password" id="unlockPass" autocomplete="current-password">
+      <p class="lock-err" id="unlockErr" role="alert"></p>
+      <button class="btn primary" type="submit" id="unlockBtn" style="width:100%">開く</button>
+    </form>
+    <div class="lock-alt">
+      <span class="small muted">パスコードを忘れた場合</span>
+      <button class="linkbtn" id="recoverBtn" type="button">リカバリーキーで開く</button>
+      <button class="linkbtn" id="forgotBtn" type="button">データを削除して最初から始める</button>
+    </div>
+  </div>
+</section>
+
+<div id="tip" role="tooltip"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="splitDlg">
+  <div class="dlg-head">内訳の設定（按分）</div>
+  <div class="dlg-body">
+    <p class="small muted" style="margin-top:0">1つの投資信託を複数の資産クラス・地域に分けて集計します。比率の合計が100%でなくても、入力した比率に合わせて自動で按分します。</p>
+    <div class="row" style="margin-bottom:10px">
+      <select id="splitPreset" style="flex:1;min-width:0"></select>
+      <button class="btn small" id="splitApplyPreset">プリセットを適用</button>
+    </div>
+    <div class="split-row small muted"><span>資産クラス</span><span>地域</span><span style="text-align:right">比率(%)</span><span></span></div>
+    <div id="splitRows"></div>
+    <div class="row" style="margin-top:6px">
+      <button class="btn small" id="splitAdd">＋ 行を追加</button>
+      <span class="spacer"></span>
+      <span class="small" id="splitSum"></span>
+    </div>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn danger" id="splitClear">内訳を解除</button>
+    <span class="spacer"></span>
+    <button class="btn" id="splitCancel">キャンセル</button>
+    <button class="btn primary" id="splitSave">保存</button>
+  </div>
+</dialog>
+
+<dialog id="passDlg">
+  <form id="passForm" autocomplete="off">
+    <div class="dlg-head" id="passTitle"></div>
+    <div class="dlg-body" id="passBody"></div>
+    <div class="dlg-foot">
+      <button type="button" class="btn" id="passCancel">キャンセル</button>
+      <button type="submit" class="btn primary" id="passOk">OK</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="recDlg">
+  <div class="dlg-head">リカバリーキー（必ず保管してください）</div>
+  <div class="dlg-body">
+    <p class="small" style="margin-top:0">パスコードを忘れたとき、このキーでデータを開いてパスコードを設定し直せます。<b>この画面を閉じると、同じキーは二度と表示できません。</b></p>
+    <div class="reccode" id="recCode"></div>
+    <div class="row" style="justify-content:center;margin:12px 0">
+      <button type="button" class="btn small" id="recCopy">コピー</button>
+      <button type="button" class="btn small" id="recSave">テキストファイルで保存</button>
+    </div>
+    <ul class="small" style="margin:0 0 8px;padding-left:1.2em;color:var(--ink2)">
+      <li>紙に書き写すか、パスワード管理アプリに保存するのがおすすめです。</li>
+      <li>このキーを知っている人は誰でもデータを開けます。PC・スマホの中にファイルのまま置かず、人に見られない場所に保管してください。</li>
+    </ul>
+    <label class="ack"><input type="checkbox" id="recAck"><span>リカバリーキーを安全な場所に保管しました</span></label>
+  </div>
+  <div class="dlg-foot"><button type="button" class="btn primary" id="recDone" disabled>閉じる</button></div>
+</dialog>
+
+<dialog id="bulkDlg" class="wide">
+  <div class="dlg-head">単価・評価額をまとめて更新</div>
+  <div class="dlg-body">
+    <p class="small muted" style="margin-top:0">証券会社の画面や株探を見ながら、上から順に入力してください（Enterで次の欄へ移動します）。変更した欄だけが保存されます。</p>
+    <div id="bulkRows"></div>
+  </div>
+  <div class="dlg-foot">
+    <button type="button" class="btn" id="bulkCancel">キャンセル</button>
+    <button type="button" class="btn primary" id="bulkSave">保存</button>
+  </div>
+</dialog>
+
+<dialog id="rakutenDlg" class="wide">
+  <div class="dlg-head">楽天証券のCSVを取り込む</div>
+  <div class="dlg-body" id="rakutenBody"></div>
+  <div class="dlg-foot">
+    <button type="button" class="btn" id="rakutenCancel">キャンセル</button>
+    <button type="button" class="btn primary" id="rakutenApply">取り込む</button>
+  </div>
+</dialog>
+
+<dialog id="confirmDlg">
+  <div class="dlg-head" id="confirmTitle">確認</div>
+  <div class="dlg-body" id="confirmMsg" style="white-space:pre-line"></div>
+  <div class="dlg-foot">
+    <button class="btn" id="confirmNo">キャンセル</button>
+    <button class="btn primary" id="confirmYes">OK</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+'use strict';
+
+/* ===== 定義 ===== */
+const CLS = [
+  {k:'stock', n:'株式'}, {k:'bond', n:'債券'}, {k:'cash', n:'現金・預金'},
+  {k:'gold', n:'金・コモディティ'}, {k:'realestate', n:'不動産'}, {k:'crypto', n:'暗号資産'},
+  {k:'insurance', n:'保険・年金'}, {k:'other', n:'その他', gray:true}
+];
+const REG = [
+  {k:'jp', n:'日本'}, {k:'us', n:'米国'}, {k:'dev', n:'先進国（日米以外）'},
+  {k:'em', n:'新興国'}, {k:'other', n:'その他・不明', gray:true}
+];
+const CUR = [
+  {k:'JPY', n:'円'}, {k:'USD', n:'米ドル'}, {k:'EUR', n:'ユーロ'}, {k:'GBP', n:'英ポンド'},
+  {k:'AUD', n:'豪ドル'}, {k:'CAD', n:'カナダドル'}, {k:'CHF', n:'スイスフラン'}, {k:'OTHER', n:'その他の外貨', gray:true}
+];
+const TAX = [
+  {k:'tsumitate', n:'新NISA つみたて投資枠'}, {k:'growth', n:'新NISA 成長投資枠'}, {k:'oldnisa', n:'旧NISA'},
+  {k:'ideco', n:'iDeCo'}, {k:'dc', n:'企業型DC'}, {k:'tokutei', n:'特定口座'}, {k:'ippan', n:'一般口座'},
+  {k:'none', n:'対象外（預金・不動産など）', gray:true}
+];
+const DIMS = [
+  {k:'cls', n:'資産クラス', type:'donut'},
+  {k:'reg', n:'地域', type:'donut'},
+  {k:'cur', n:'通貨', type:'donut'},
+  {k:'account', n:'金融機関', type:'donut'},
+  {k:'tax', n:'口座区分（NISA等）', type:'donut'},
+  {k:'detail', n:'資産クラス×地域', type:'bars'},
+  {k:'holding', n:'銘柄別', type:'bars'}
+];
+const DEFS = {cls:CLS, reg:REG, cur:CUR, tax:TAX};
+const PRESETS = [
+  {n:'全世界株式（オール・カントリー型）', rows:[['stock','us',64],['stock','jp',5],['stock','dev',20],['stock','em',11]]},
+  {n:'先進国株式（日本除く）', rows:[['stock','us',75],['stock','dev',25]]},
+  {n:'米国株式（S&P500など）', rows:[['stock','us',100]]},
+  {n:'新興国株式', rows:[['stock','em',100]]},
+  {n:'8資産均等型', rows:[['stock','jp',12.5],['stock','us',9],['stock','dev',3.5],['stock','em',12.5],['bond','jp',12.5],['bond','us',6],['bond','dev',6.5],['bond','em',12.5],['realestate','jp',12.5],['realestate','us',9],['realestate','dev',3.5]]},
+  {n:'4資産均等型', rows:[['stock','jp',25],['stock','us',18],['stock','dev',7],['bond','jp',25],['bond','us',12],['bond','dev',13]]},
+  {n:'先進国債券（日本除く）', rows:[['bond','us',45],['bond','dev',55]]}
+];
+const NISA_LIFETIME = 18000000, NISA_GROWTH_MAX = 12000000;
+const STORE_KEY = 'shisan-bunsan-chart.v1';
+const DEFAULT_RATES = {USD:150, EUR:165, GBP:195, AUD:100, CAD:110, CHF:180, OTHER:100};
+/* 価格を自動取得できる銘柄（Currency API から。貴金属はトロイオンス→グラムに換算）。min/max は不正な値を弾くための範囲 */
+const AUTO_PRICES = {
+  BTC:{n:'ビットコイン（BTC）', unit:'BTC', min:1e5, max:1e9},
+  ETH:{n:'イーサリアム（ETH）', unit:'ETH', min:1e3, max:1e8},
+  XRP:{n:'エックスアールピー（XRP）', unit:'XRP', min:0.1, max:1e5},
+  SOL:{n:'ソラナ（SOL）', unit:'SOL', min:10, max:1e7},
+  XAU:{n:'金（1グラムあたり）', unit:'g', min:1000, max:200000, oz:true},
+  XAG:{n:'銀（1グラムあたり）', unit:'g', min:10, max:20000, oz:true},
+  XPT:{n:'プラチナ（1グラムあたり）', unit:'g', min:500, max:200000, oz:true}
+};
+const TROY_OZ_G = 31.1034768;
+
+/* ===== 状態 ===== */
+function blankState(){
+  return {
+    version:1, holdings:[], rates:{...DEFAULT_RATES}, ratesUpdated:'', ratesSource:'manual', ratesFetchedAt:0,
+    prices:{}, pricesUpdated:'', lastBackup:'',
+    targets:{cls:{}, reg:{}}, threshold:5, snapshots:[],
+    ui:{dim:'cls', hide:false, theme:'auto', tab:'chart', rbAxis:'cls', rbMode:'add', hsAxis:'cls', hsMode:'amount', autoLock:15, lockOnHide:false, fxAuto:null, backupSnooze:'', iosTipOff:false}
+  };
+}
+const AUTO_LOCK_CHOICES = [0, 5, 15, 30, 60];
+let loadWarning = '';
+let crypt = null;          // パスコード保護中だけ {key, salt, iter} を持つ（鍵は取り出し不可・パスコード自体は保持しない）
+let locked = false;        // ロック画面を表示中か
+let lockedEnvelope = null; // ロック中の暗号化データ
+let state = load();
+let selected = null; // グラフで選択中の区分キー
+
+function storedTheme(){
+  try{ return pickOne(['auto', 'light', 'dark'], localStorage.getItem(STORE_KEY + '.theme'), 'auto'); }catch(e){ return 'auto'; }
+}
+function load(){
+  let raw = null;
+  try{ raw = localStorage.getItem(STORE_KEY); }catch(e){ loadWarning = 'このブラウザではデータを保存できません。バックアップを保存して使ってください。'; }
+  if(!raw) return blankState();
+  try{
+    const obj = JSON.parse(raw);
+    if(isEnvelope(obj)){
+      // 暗号化されている → パスコード入力まではデータを持たない
+      locked = true; lockedEnvelope = obj;
+      const s = blankState(); s.ui.theme = storedTheme(); return s;
+    }
+    return normalize(obj);
+  }catch(e){
+    // 読めなかったデータを上書きで消さないよう、別の場所に退避しておく
+    try{ localStorage.setItem(STORE_KEY + '.broken-' + Date.now(), raw); }catch(_){}
+    loadWarning = '保存データを読み込めませんでした。元のデータはブラウザ内に退避してあります。';
+    return blankState();
+  }
+}
+/* 読み込んだデータは信用せず、決められた項目・型・値だけを取り出して作り直す（不正なファイル対策） */
+// ※ 起動時の load() から呼ばれるため、巻き上げ（hoisting）される function 宣言で書く
+function isObj(v){ return v !== null && typeof v === 'object' && !Array.isArray(v); }
+function toNum(v){ const n = typeof v === 'number' ? v : parseNum(v); return isFinite(n) ? n : 0; }
+function pickKey(list, v, d){ return list.some(x => x.k === v) ? v : d; }
+function pickOne(arr, v, d){ return arr.includes(v) ? v : d; }
+function toStr(v, max){ return (typeof v === 'string' || typeof v === 'number' ? String(v) : '').slice(0, max); }
+function isDate(v){ return typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v); }
+function cleanCode(v){ const c = toStr(v, 20).normalize('NFKC').trim().toUpperCase(); return /^[0-9A-Z.\-]{1,12}$/.test(c) ? c : ''; }
+function numMap(src, list){
+  const o = {}; if(!isObj(src)) return o;
+  list.forEach(c => { if(Object.prototype.hasOwnProperty.call(src, c.k) && src[c.k] !== '' && src[c.k] !== null) o[c.k] = Math.max(0, toNum(src[c.k])); });
+  return o;
+}
+function normalize(s){
+  s = isObj(s) ? s : {};
+  const out = blankState();
+  const ui = isObj(s.ui) ? s.ui : {};
+  out.holdings = (Array.isArray(s.holdings) ? s.holdings.slice(0, 1000) : []).map(fixHolding);
+  const seen = new Set();
+  out.holdings.forEach(h => { while(seen.has(h.id)) h.id = uid(); seen.add(h.id); });
+  CUR.forEach(c => { if(c.k !== 'JPY' && isObj(s.rates) && s.rates[c.k] !== undefined) out.rates[c.k] = Math.max(0, toNum(s.rates[c.k])); });
+  out.ratesUpdated = isDate(s.ratesUpdated) ? s.ratesUpdated : '';
+  out.ratesSource = pickOne(['manual', 'ecb', 'market'], s.ratesSource, 'manual');
+  out.ratesFetchedAt = Math.max(0, toNum(s.ratesFetchedAt));
+  if(isObj(s.prices)) Object.keys(AUTO_PRICES).forEach(k => { const v = toNum(s.prices[k]); if(v > 0) out.prices[k] = v; });
+  out.pricesUpdated = isDate(s.pricesUpdated) ? s.pricesUpdated : '';
+  out.lastBackup = isDate(s.lastBackup) ? s.lastBackup : '';
+  const tg = isObj(s.targets) ? s.targets : {};
+  out.targets = {cls:numMap(tg.cls, CLS), reg:numMap(tg.reg, REG)};
+  out.threshold = Math.min(50, Math.max(0, toNum(s.threshold === undefined ? 5 : s.threshold)));
+  const snapMap = new Map();
+  (Array.isArray(s.snapshots) ? s.snapshots.slice(0, 5000) : []).forEach(x => {
+    if(!isObj(x) || !isDate(x.date)) return;
+    snapMap.set(x.date, {date:x.date, total:Math.max(0, toNum(x.total)), cls:numMap(x.cls, CLS), reg:numMap(x.reg, REG)});
+  });
+  out.snapshots = Array.from(snapMap.values()).sort((a, b) => a.date.localeCompare(b.date));
+  out.ui = {
+    dim: pickOne(DIMS.map(d => d.k), ui.dim, 'cls'), hide: ui.hide === true,
+    theme: pickOne(['auto', 'light', 'dark'], ui.theme, 'auto'),
+    tab: pickOne(['chart', 'input', 'target', 'history', 'settings'], ui.tab, 'chart'),
+    rbAxis: pickOne(['cls', 'reg'], ui.rbAxis, 'cls'), rbMode: pickOne(['add', 'trade', 'withdraw'], ui.rbMode, 'add'),
+    hsAxis: pickOne(['cls', 'reg'], ui.hsAxis, 'cls'), hsMode: pickOne(['amount', 'ratio'], ui.hsMode, 'amount'),
+    autoLock: pickOne(AUTO_LOCK_CHOICES, ui.autoLock, 15), lockOnHide: ui.lockOnHide === true,
+    fxAuto: ui.fxAuto === true ? true : ui.fxAuto === false ? false : null,  // null = まだ聞いていない
+    backupSnooze: isDate(ui.backupSnooze) ? ui.backupSnooze : '', iosTipOff: ui.iosTipOff === true
+  };
+  return out;
+}
+function fixHolding(h){
+  h = isObj(h) ? h : {};
+  const split = Array.isArray(h.split)
+    ? h.split.slice(0, 50).filter(isObj).map(r => ({cls:pickKey(CLS, r.cls, 'other'), reg:pickKey(REG, r.reg, 'other'), pct:Math.max(0, toNum(r.pct))})).filter(r => r.pct > 0)
+    : [];
+  return {
+    id: typeof h.id === 'string' && /^[a-z0-9]{1,40}$/i.test(h.id) ? h.id : uid(),
+    name: toStr(h.name, 200), mode: h.mode === 'qty' ? 'qty' : 'amount',
+    amount: toNum(h.amount), qty: toNum(h.qty), price: toNum(h.price),
+    currency: pickKey(CUR, h.currency, 'JPY'),
+    cls: split.length === 1 ? split[0].cls : pickKey(CLS, h.cls, 'stock'),
+    reg: split.length === 1 ? split[0].reg : pickKey(REG, h.reg, 'jp'),
+    account: toStr(h.account, 100), tax: pickKey(TAX, h.tax, 'none'),
+    cost: h.cost === null || h.cost === undefined || h.cost === '' ? null : Math.max(0, toNum(h.cost)),
+    split: split.length > 1 ? split : null,
+    code: cleanCode(h.code),                                   // 銘柄コード・ティッカー（株探リンク用）
+    auto: Object.prototype.hasOwnProperty.call(AUTO_PRICES, h.auto) ? h.auto : '',  // 価格の自動取得
+    importKey: toStr(h.importKey, 200),                        // 証券会社CSVから取り込んだ銘柄の識別子
+    updated: isDate(h.updated) ? h.updated : ''                // 価格・評価額を最後に更新した日
+  };
+}
+let saveTimer = null;
+let saveChain = Promise.resolve();
+function save(){
+  if(locked) return; // ロック中は空の状態で上書きしない
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(flushSave, 150);
+}
+/** 保存を今すぐ実行する。保護中は毎回新しいIVで暗号化してから書き込む（順番が入れ替わらないよう直列化） */
+function flushSave(){
+  clearTimeout(saveTimer); saveTimer = null;
+  if(locked) return saveChain;
+  if(state.holdings.length) requestPersist();
+  const text = JSON.stringify(state), c = crypt, theme = state.ui.theme;
+  saveChain = saveChain.then(async () => {
+    try{
+      const payload = c ? JSON.stringify({...await encryptText(text, c), fp:await dataFingerprint(JSON.parse(text))}) : text;
+      localStorage.setItem(STORE_KEY, payload);
+      localStorage.setItem(STORE_KEY + '.theme', theme);
+    }catch(e){ toast('ブラウザに保存できませんでした。バックアップを保存してください。'); }
+  });
+  return saveChain;
+}
+
+/* ===== 暗号化（Web Crypto） =====
+ * ランダムな「データ鍵」(256bit) でデータを AES-256-GCM 暗号化する。
+ * データ鍵そのものは、パスコード／リカバリーキーから PBKDF2-SHA256（60万回）で作った鍵でそれぞれ包んで（wrap）保存する。
+ * → パスコードとリカバリーキーのどちらか一方があれば開ける。パスコード変更はデータ鍵を包み直すだけで済む。
+ */
+const KDF_ITER = 600000;
+const te = new TextEncoder(), td = new TextDecoder();
+function cryptoReady(){ return !!(window.crypto && crypto.subtle && window.isSecureContext !== false); }
+function rand(n){ return crypto.getRandomValues(new Uint8Array(n)); }
+function b64(u8){ let s = ''; for(let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); }
+function unb64(s){ const bin = atob(s); const u = new Uint8Array(bin.length); for(let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+function validIter(n){ return Number.isInteger(n) && n >= 100000 && n <= 5000000; }
+function validWrap(w){ return isObj(w) && typeof w.salt === 'string' && typeof w.iv === 'string' && typeof w.data === 'string' && validIter(w.iter); }
+function validPkWrap(p){
+  return isObj(p) && ['cred', 'prfSalt', 'salt', 'iv', 'data'].every(k => typeof p[k] === 'string' && p[k].length > 0 && p[k].length < 2000) &&
+    /^[A-Za-z0-9_-]+$/.test(p.cred) && typeof p.name === 'string' && p.name.length <= 40 && isDate(p.created);
+}
+function isEnvelope(o){
+  if(!isObj(o) || o.enc !== 'AES-GCM-256' || o.kdf !== 'PBKDF2-SHA256' || typeof o.data !== 'string' || typeof o.iv !== 'string') return false;
+  if(o.v === 2) return isObj(o.wraps) && validWrap(o.wraps.pass) && (o.wraps.rec === undefined || validWrap(o.wraps.rec)) &&
+    (o.wraps.pk === undefined || (Array.isArray(o.wraps.pk) && o.wraps.pk.length <= 10 && o.wraps.pk.every(validPkWrap)));
+  return typeof o.salt === 'string' && validIter(o.iter); // 旧形式（v1）
+}
+function hasRecovery(env){ return isEnvelope(env) && env.v === 2 && !!env.wraps.rec; }
+async function deriveKey(secret, salt, iter){
+  const base = await crypto.subtle.importKey('raw', te.encode(secret), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2', salt, iterations:iter, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, false, ['encrypt', 'decrypt']);
+}
+function importDataKey(raw){ return crypto.subtle.importKey('raw', raw, {name:'AES-GCM'}, false, ['encrypt', 'decrypt']); }
+async function wrapRaw(raw, secret){
+  const salt = rand(16), iv = rand(12);
+  const kek = await deriveKey(secret, salt, KDF_ITER);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM', iv}, kek, raw));
+  return {iter:KDF_ITER, salt:b64(salt), iv:b64(iv), data:b64(ct)};
+}
+/** 包んだデータ鍵を取り出す。パスコード（リカバリーキー）が違うと AES-GCM の認証に失敗して例外になる */
+async function unwrapRaw(w, secret){
+  const salt = unb64(w.salt), iv = unb64(w.iv);
+  if(salt.length < 16 || iv.length !== 12) throw new Error('bad wrap');
+  const kek = await deriveKey(secret, salt, w.iter);
+  return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM', iv}, kek, unb64(w.data)));
+}
+async function encryptText(text, c){
+  const iv = rand(12);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM', iv}, c.key, te.encode(text)));
+  return {app:'shisan-bunsan-chart', v:2, enc:'AES-GCM-256', kdf:'PBKDF2-SHA256', wraps:c.wraps, iv:b64(iv), data:b64(ct)};
+}
+/**
+ * 暗号化データを開く。kind は 'pass'（パスコード）か 'rec'（リカバリーキー）。
+ * keepRaw=true のときだけデータ鍵の生バイトを返す（呼び出し側で必ず fill(0) で消す）
+ */
+async function openEnvelope(env, secret, kind = 'pass', keepRaw = false){
+  const iv = unb64(env.iv);
+  if(iv.length !== 12) throw new Error('bad envelope');
+  let raw;
+  if(env.v !== 2){
+    // 旧形式（v1）: パスコードから直接作った鍵で暗号化されている → 開いたら新形式に作り直す
+    if(kind !== 'pass') throw new Error('no recovery');
+    const salt = unb64(env.salt); if(salt.length < 16) throw new Error('bad envelope');
+    const oldKey = await deriveKey(secret, salt, env.iter);
+    const text = td.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv}, oldKey, unb64(env.data)));
+    raw = rand(32);
+    const c = {key:await importDataKey(raw), wraps:{pass:await wrapRaw(raw, secret)}};
+    if(!keepRaw) raw.fill(0);
+    return {text, crypt:c, raw:keepRaw ? raw : null, migrated:true};
+  }
+  const w = env.wraps[kind];
+  if(!w) throw new Error('no wrap');
+  raw = await unwrapRaw(w, kind === 'rec' ? normRec(secret) : secret);
+  const key = await importDataKey(raw);
+  const text = td.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, unb64(env.data)));
+  if(!keepRaw) raw.fill(0);
+  return {text, crypt:{key, wraps:{...env.wraps}}, raw:keepRaw ? raw : null, migrated:false};
+}
+/** パスコードで開けなければ、リカバリーキーとして試す（バックアップの復元用） */
+async function openWithAny(env, secret){
+  try{ return await openEnvelope(env, secret, 'pass'); }
+  catch(e){ if(hasRecovery(env)) return await openEnvelope(env, secret, 'rec'); throw e; }
+}
+/* リカバリーキー: 160bit の乱数を Crockford Base32（紛らわしい I L O U を使わない32文字）で表し、4文字ずつ区切る */
+const B32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+function genRecoveryCode(){
+  let bits = 0, val = 0, out = '';
+  for(const x of rand(20)){
+    val = (val << 8) | x; bits += 8;
+    while(bits >= 5){ out += B32[(val >>> (bits - 5)) & 31]; bits -= 5; }
+    val &= (1 << bits) - 1;
+  }
+  return out.match(/.{4}/g).join('-');
+}
+function normRec(s){ return String(s).toUpperCase().replace(/[^0-9A-Z]/g, '').replace(/O/g, '0').replace(/[IL]/g, '1'); }
+/** 保護を新しく設定: データ鍵を作り、パスコードとリカバリーキーの両方で包む */
+async function createCrypt(pass){
+  const raw = rand(32), rec = genRecoveryCode();
+  const wraps = {pass:await wrapRaw(raw, pass), rec:await wrapRaw(raw, normRec(rec))};
+  const key = await importDataKey(raw); raw.fill(0);
+  return {crypt:{key, wraps}, rec};
+}
+function checkNewPass(p1, p2){
+  if(p1.length < 8) return 'パスコードは8文字以上にしてください。';
+  if(/^\d+$/.test(p1) && p1.length < 12) return '数字だけの場合は12桁以上にしてください（英字を混ぜるとより安全です）。';
+  if(p1 !== p2) return '確認用のパスコードが一致しません。';
+  return null;
+}
+/** 入力されたパスコードが、いまの保護のパスコードと一致するか */
+async function verifyCurrentPass(pass){
+  if(!crypt) return false;
+  try{ (await unwrapRaw(crypt.wraps.pass, pass)).fill(0); return true; }catch(e){ return false; }
+}
+/** パスコードを変更（データ鍵を新しいパスコードで包み直す）。いまのパスコードが違えば例外 */
+async function rewrapPass(cur, next){
+  const raw = await unwrapRaw(crypt.wraps.pass, cur);
+  try{ crypt = {key:crypt.key, wraps:{...crypt.wraps, pass:await wrapRaw(raw, next)}}; }finally{ raw.fill(0); }
+}
+/** リカバリーキーを（再）発行。いまのパスコードが違えば例外 */
+async function reissueRecovery(cur){
+  const raw = await unwrapRaw(crypt.wraps.pass, cur), rec = genRecoveryCode();
+  try{ crypt = {key:crypt.key, wraps:{...crypt.wraps, rec:await wrapRaw(raw, normRec(rec))}}; }finally{ raw.fill(0); }
+  return rec;
+}
+
+/* ===== ユーティリティ ===== */
+function uid(){ return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function parseNum(v){
+  if(typeof v === 'number') return isFinite(v) ? v : 0;
+  const s = String(v ?? '').replace(/[,\s円¥￥]/g, '').replace(/[０-９．－]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0));
+  const n = parseFloat(s);
+  return isFinite(n) ? n : 0;
+}
+function fmtInt(n){ return Math.round(n).toLocaleString('ja-JP'); }
+function fmtNum(n){ return (Math.round(n * 10000) / 10000).toLocaleString('ja-JP', {maximumFractionDigits:4}); }
+function yen(n){ return state.ui.hide ? '••••円' : fmtInt(n) + '円'; }
+function man(n){
+  if(state.ui.hide) return '••••';
+  const a = Math.abs(n), sg = n < 0 ? '-' : '';
+  if(a >= 1e8) return sg + (a / 1e8).toLocaleString('ja-JP', {maximumFractionDigits:2}) + '億円';
+  if(a >= 1e4) return sg + Math.round(a / 1e4).toLocaleString('ja-JP') + '万円';
+  return sg + fmtInt(a) + '円';
+}
+function signedYen(n){
+  if(state.ui.hide) return '••••円';
+  return (n > 0 ? '+' : n < 0 ? '−' : '') + fmtInt(Math.abs(n)) + '円';
+}
+function pct(x, d=1){ return isFinite(x) ? (x * 100).toFixed(d) + '%' : '—'; }
+function today(){ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function jpDate(s){ const [y,m,d] = s.split('-').map(Number); return `${y}年${m}月${d}日`; }
+function nameOf(list, k){ const f = list.find(x => x.k === k); return f ? f.n : k; }
+function colorOfIndex(i, gray){ return gray ? 'var(--gray)' : `var(--s${i + 1})`; }
+function colorOf(dim, k){
+  const list = DEFS[dim]; if(!list) return 'var(--gray)';
+  const i = list.findIndex(x => x.k === k);
+  return i < 0 ? 'var(--gray)' : colorOfIndex(i, list[i].gray);
+}
+function resolveColor(c){
+  const m = /var\((--[\w-]+)\)/.exec(c);
+  return m ? getComputedStyle(document.documentElement).getPropertyValue(m[1]).trim() : c;
+}
+let toastTimer = null;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.display = 'none', 2600);
+}
+function confirmBox(msg, title='確認', okLabel='OK', noLabel='キャンセル'){
+  return new Promise(res => {
+    const d = $('#confirmDlg');
+    $('#confirmTitle').textContent = title; $('#confirmMsg').textContent = msg; $('#confirmYes').textContent = okLabel; $('#confirmNo').textContent = noLabel;
+    const done = v => { d.close(); $('#confirmYes').onclick = $('#confirmNo').onclick = null; res(v); };
+    $('#confirmYes').onclick = () => done(true);
+    $('#confirmNo').onclick = () => done(false);
+    d.oncancel = e => { e.preventDefault(); done(false); };
+    d.showModal();
+  });
+}
+/** 確認ダイアログの「OK」クリックの中で action を同期的に呼ぶ（パスキー作成など、ユーザー操作の直後でないと動かない処理用）。
+ *  OK なら {p: action の Promise}、キャンセルなら null を返す（Promise をそのまま返すと完了まで待たされ、結果が区別できないため包む） */
+function actionBox(msg, title, okLabel, action){
+  return new Promise(res => {
+    const d = $('#confirmDlg');
+    $('#confirmTitle').textContent = title; $('#confirmMsg').textContent = msg; $('#confirmYes').textContent = okLabel; $('#confirmNo').textContent = 'キャンセル';
+    const done = v => { d.close(); $('#confirmYes').onclick = $('#confirmNo').onclick = null; res(v); };
+    $('#confirmYes').onclick = () => { const p = action(); done({p}); };
+    $('#confirmNo').onclick = () => done(null);
+    d.oncancel = e => { e.preventDefault(); done(null); };
+    d.showModal();
+  });
+}
+function download(name, text, type){
+  const blob = text instanceof Blob ? text : new Blob([text], {type});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ===== 計算 ===== */
+function nativeValue(h){ return h.mode === 'qty' ? parseNum(h.qty) * parseNum(h.price) : parseNum(h.amount); }
+function rateOf(cur){ return cur === 'JPY' ? 1 : parseNum(state.rates[cur]); }
+function jpyValue(h){ return Math.max(0, nativeValue(h) * rateOf(h.currency)); }
+function validSplit(h){
+  return Array.isArray(h.split) && h.split.length && h.split.reduce((a, r) => a + Math.max(0, parseNum(r.pct)), 0) > 0;
+}
+function partsOf(h){
+  const v = jpyValue(h);
+  if(validSplit(h)){
+    const sum = h.split.reduce((a, r) => a + Math.max(0, parseNum(r.pct)), 0);
+    return h.split.filter(r => parseNum(r.pct) > 0).map(r => ({cls:r.cls, reg:r.reg, v: v * parseNum(r.pct) / sum}));
+  }
+  return [{cls:h.cls, reg:h.reg, v}];
+}
+function mainCls(h){
+  const ps = partsOf(h); const m = {};
+  ps.forEach(p => m[p.cls] = (m[p.cls] || 0) + p.v);
+  return Object.keys(m).sort((a, b) => m[b] - m[a])[0] || h.cls;
+}
+function total(){ return state.holdings.reduce((a, h) => a + jpyValue(h), 0); }
+
+function accountOrder(){
+  const order = [];
+  state.holdings.forEach(h => { const a = (h.account || '').trim(); if(a && !order.includes(a)) order.push(a); });
+  return order;
+}
+
+/** 分類ごとの集計。fixed dims は定義順（色の並び）を保つ */
+function aggregate(dim){
+  const map = new Map();
+  const add = (key, name, color, v, h, order) => {
+    if(v <= 0) return;
+    let g = map.get(key);
+    if(!g){ g = {key, name, color, value:0, items:new Map(), order}; map.set(key, g); }
+    g.value += v;
+    g.items.set(h.id, (g.items.get(h.id) || 0) + v);
+  };
+  if(dim === 'cls' || dim === 'reg'){
+    const list = DEFS[dim];
+    state.holdings.forEach(h => partsOf(h).forEach(p => {
+      const k = p[dim]; const i = list.findIndex(x => x.k === k);
+      add(k, nameOf(list, k), colorOf(dim, k), p.v, h, i);
+    }));
+  }else if(dim === 'cur' || dim === 'tax'){
+    const list = DEFS[dim];
+    state.holdings.forEach(h => {
+      const k = dim === 'cur' ? h.currency : h.tax; const i = list.findIndex(x => x.k === k);
+      add(k, nameOf(list, k), colorOf(dim, k), jpyValue(h), h, i);
+    });
+  }else if(dim === 'account'){
+    const order = accountOrder();
+    state.holdings.forEach(h => {
+      const a = (h.account || '').trim();
+      if(!a){ add('__none', '未設定', 'var(--gray2)', jpyValue(h), h, 99); return; }
+      const i = order.indexOf(a);
+      if(i < 8) add(a, a, colorOfIndex(i), jpyValue(h), h, i);
+      else add('__other', 'その他の金融機関', 'var(--gray)', jpyValue(h), h, 98);
+    });
+  }else if(dim === 'detail'){
+    state.holdings.forEach(h => partsOf(h).forEach(p => {
+      add(p.cls + '|' + p.reg, `${nameOf(CLS, p.cls)}（${nameOf(REG, p.reg)}）`, colorOf('cls', p.cls), p.v, h, 0);
+    }));
+  }else if(dim === 'holding'){
+    state.holdings.forEach(h => add(h.id, h.name || '（名称未設定）', colorOf('cls', mainCls(h)), jpyValue(h), h, 0));
+  }
+  const arr = Array.from(map.values());
+  const isBars = dim === 'detail' || dim === 'holding';
+  arr.sort(isBars ? (a, b) => b.value - a.value : (a, b) => a.order - b.order);
+  return arr;
+}
+function isSafe(p, h){ return (p.cls === 'cash' || p.cls === 'bond') && p.reg === 'jp' && h.currency === 'JPY'; }
+function isYen(p, h){ return h.currency === 'JPY' && p.reg === 'jp'; }
+
+/* 目標との比較（目標が入力された区分だけを母数にする） */
+function targetCompare(axis){
+  const tg = state.targets[axis] || {};
+  const list = DEFS[axis];
+  const agg = {}; aggregate(axis).forEach(g => agg[g.key] = g.value);
+  const managed = list.filter(c => tg[c.k] !== undefined && tg[c.k] !== '' && tg[c.k] !== null);
+  const sumT = managed.reduce((a, c) => a + parseNum(tg[c.k]), 0);
+  const base = managed.reduce((a, c) => a + (agg[c.k] || 0), 0);
+  const rows = managed.map(c => {
+    const cur = agg[c.k] || 0;
+    const t = sumT > 0 ? parseNum(tg[c.k]) / sumT : 0;
+    const a = base > 0 ? cur / base : 0;
+    return {k:c.k, n:c.n, color:colorOf(axis, c.k), cur, t, a, diff:a - t, tRaw:parseNum(tg[c.k])};
+  });
+  const excluded = list.filter(c => !managed.includes(c) && (agg[c.k] || 0) > 0).map(c => c.n);
+  return {rows, sumT, base, excluded, managedKeys:new Set(managed.map(c => c.k))};
+}
+function statusOf(diff){
+  const th = state.threshold / 100;
+  if(diff > th) return {cls:'over', html:'<span class="status over">▲ 多い</span>'};
+  if(diff < -th) return {cls:'under', html:'<span class="status under">▼ 少ない</span>'};
+  return {cls:'ok', html:'<span class="status ok">✓ 範囲内</span>'};
+}
+
+/** リバランス計算 */
+function rebalance(axis, mode, amount){
+  const cmp = targetCompare(axis);
+  const rows = cmp.rows.map(r => ({...r}));
+  const B = cmp.base;
+  let C = Math.max(0, amount);
+  if(mode === 'trade'){
+    const T = B + C;
+    rows.forEach(r => r.adj = r.t * T - r.cur);
+  }else if(mode === 'add'){
+    // 水位を上げる方式: 目標比で最も不足している区分から順に買い増す
+    const f = L => rows.reduce((s, r) => s + Math.max(0, L * r.t - r.cur), 0);
+    if(C > 0 && rows.some(r => r.t > 0)){
+      let lo = 0, hi = 1;
+      while(f(hi) < C) hi *= 2;
+      for(let i = 0; i < 100; i++){ const mid = (lo + hi) / 2; if(f(mid) < C) lo = mid; else hi = mid; }
+      rows.forEach(r => r.adj = Math.max(0, hi * r.t - r.cur));
+      const s = rows.reduce((a, r) => a + r.adj, 0);
+      if(s > 0) rows.forEach(r => r.adj *= C / s);
+    }else rows.forEach(r => r.adj = 0);
+  }else{ // withdraw: 目標より多い区分から順に売る
+    C = Math.min(C, B);
+    const f = L => rows.reduce((s, r) => s + Math.max(0, r.cur - L * r.t), 0);
+    if(C > 0){
+      // f は L について単調減少。f(L)=C となる L を二分探索（目標0%の区分だけで足りる場合は上限で打ち切り）
+      let lo = 0, hi = 1;
+      while(f(hi) > C && hi < 1e15) hi *= 2;
+      for(let i = 0; i < 100; i++){ const mid = (lo + hi) / 2; if(f(mid) > C) lo = mid; else hi = mid; }
+      rows.forEach(r => r.adj = -Math.max(0, r.cur - hi * r.t));
+      const s = rows.reduce((a, r) => a - r.adj, 0);
+      if(s > 0) rows.forEach(r => r.adj *= C / s);
+    }else rows.forEach(r => r.adj = 0);
+  }
+  const newBase = rows.reduce((a, r) => a + r.cur + r.adj, 0);
+  rows.forEach(r => r.after = newBase > 0 ? (r.cur + r.adj) / newBase : 0);
+  return {...cmp, rows, C};
+}
+
+/* ===== 描画: 共通 ===== */
+function renderAll(){
+  applyTheme();
+  $('#hideBtn').setAttribute('aria-pressed', state.ui.hide);
+  $('#hideBtn').textContent = state.ui.hide ? '金額を表示' : '金額を隠す';
+  renderTiles(); renderDimSeg(); renderChart();
+  renderTargets(); renderRebalance(); renderHistory(); renderSettings();
+}
+function renderCharts(){ renderTiles(); renderChart(); renderTargets(); renderRebalance(); }
+function applyTheme(){
+  const t = state.ui.theme;
+  if(t === 'auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', t);
+}
+function setSeg(el, v){ $$('button', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v)); }
+
+/* ===== サマリー ===== */
+function renderTiles(){
+  renderNotices();
+  renderFxBanner();
+  const T = total();
+  let safe = 0, yenV = 0, costSum = 0, costVal = 0, costN = 0, nisaCost = 0, nisaGrowth = 0, nisaMissing = 0;
+  state.holdings.forEach(h => {
+    partsOf(h).forEach(p => { if(isSafe(p, h)) safe += p.v; if(isYen(p, h)) yenV += p.v; });
+    const c = h.cost === null || h.cost === '' || h.cost === undefined ? null : parseNum(h.cost);
+    if(c !== null && c > 0){ costSum += c; costVal += jpyValue(h); costN++; }
+    if(h.tax === 'tsumitate' || h.tax === 'growth'){
+      if(c !== null && c > 0){ nisaCost += c; if(h.tax === 'growth') nisaGrowth += c; }
+      else nisaMissing++;
+    }
+  });
+  const meter = (a, b, ca, cb, la, lb) => {
+    const s = a + b; const pa = s > 0 ? a / s : 0;
+    if(s <= 0) return `<div class="val md muted">—</div>`;
+    return `<div class="meter" role="img" aria-label="${la} ${pct(pa)}、${lb} ${pct(1 - pa)}">
+      ${pa > 0 ? `<span style="width:${pa * 100}%;background:${ca}"></span>` : ''}
+      ${pa < 1 ? `<span style="flex:1;background:${cb}"></span>` : ''}</div>
+      <div class="meter-legend"><span><i style="background:${ca}"></i>${la} ${pct(pa)}</span><span><i style="background:${cb}"></i>${lb} ${pct(1 - pa)}</span></div>`;
+  };
+  const gain = costVal - costSum;
+  const nisaTile = (nisaCost > 0 || nisaMissing > 0) ? `
+    <div class="tile">
+      <div class="lbl">新NISA 生涯投資枠の使用（目安）</div>
+      <div class="val md">${man(nisaCost)} <span class="small muted">/ 1,800万円</span></div>
+      <div class="meter"><span style="width:${Math.min(100, nisaCost / NISA_LIFETIME * 100)}%;background:var(--s1)"></span><span style="flex:1;background:var(--surface2)"></span></div>
+      <div class="note">うち成長投資枠 ${man(nisaGrowth)}（上限1,200万円）・残り ${man(Math.max(0, NISA_LIFETIME - nisaCost))}${nisaMissing ? `<br>取得額が未入力のNISA資産が${nisaMissing}件あります` : ''}</div>
+    </div>` : '';
+  $('#tiles').innerHTML = `
+    <div class="tile tile-total">
+      <div class="lbl">総資産</div>
+      <div class="val">${man(T)}</div>
+      <div class="note">${state.holdings.length}件の資産${state.ui.hide ? '' : `・${fmtInt(T)}円`}${hasForeign() ? `<br>為替レート: ${esc(rateLabel(true))}` : ''}${needPrices() ? `<br>暗号資産・金の価格: ${state.pricesUpdated ? esc(state.pricesUpdated.slice(5).replace('-', '/').replace(/^0/, '').replace('/0', '/')) + '時点' : '未取得'}` : ''}</div>
+    </div>
+    <div class="tile">
+      <div class="lbl">安全資産とリスク資産</div>
+      ${meter(safe, T - safe, 'var(--s3)', 'var(--s1)', '安全資産', 'リスク資産')}
+      <div class="note ex">安全資産＝円の現金・預金と日本の債券</div>
+    </div>
+    <div class="tile">
+      <div class="lbl">円資産と外貨・海外資産</div>
+      ${meter(yenV, T - yenV, 'var(--s2)', 'var(--s7)', '円資産', '外貨・海外')}
+      <div class="note ex">円建ての投資信託でも、中身が海外なら外貨側に数えます</div>
+    </div>
+    <div class="tile">
+      <div class="lbl">含み損益</div>
+      ${costN ? `<div class="val md ${gain >= 0 ? 'pos' : 'neg'}">${signedYen(gain)}</div>
+      <div class="note">取得額を入力した${costN}件の合計（${costSum > 0 ? (gain >= 0 ? '+' : '') + (gain / costSum * 100).toFixed(1) + '%' : ''}）</div>`
+      : `<div class="val md muted">—</div><div class="note">「資産入力」で取得額を入れると表示されます</div>`}
+    </div>
+    ${nisaTile}`;
+}
+
+/* ===== 円グラフ ===== */
+function renderDimSeg(){
+  $('#dimSeg').innerHTML = DIMS.map(d => `<button data-v="${d.k}" aria-pressed="${state.ui.dim === d.k}">${d.n}</button>`).join('');
+}
+function arcPath(cx, cy, R, r, a0, a1){
+  const full = a1 - a0 >= Math.PI * 2 - 1e-6;
+  if(full){
+    return `M${cx} ${cy - R}A${R} ${R} 0 1 1 ${cx} ${cy + R}A${R} ${R} 0 1 1 ${cx} ${cy - R}Z` +
+           `M${cx} ${cy - r}A${r} ${r} 0 1 0 ${cx} ${cy + r}A${r} ${r} 0 1 0 ${cx} ${cy - r}Z`;
+  }
+  const p = (rad, a) => [cx + rad * Math.cos(a), cy + rad * Math.sin(a)];
+  const large = a1 - a0 > Math.PI ? 1 : 0;
+  const [x0, y0] = p(R, a0), [x1, y1] = p(R, a1), [x2, y2] = p(r, a1), [x3, y3] = p(r, a0);
+  return `M${x0} ${y0}A${R} ${R} 0 ${large} 1 ${x1} ${y1}L${x2} ${y2}A${r} ${r} 0 ${large} 0 ${x3} ${y3}Z`;
+}
+function renderChart(){
+  const area = $('#chartArea');
+  const dim = DIMS.find(d => d.k === state.ui.dim) || DIMS[0];
+  const groups = aggregate(dim.k);
+  const T = groups.reduce((a, g) => a + g.value, 0);
+  if(!state.holdings.length || T <= 0){
+    area.innerHTML = `<div class="empty"><p>まだ資産が登録されていません。</p>
+      <div class="row" style="justify-content:center"><button class="btn primary" data-act="goto-input">資産を入力する</button><button class="btn" data-act="sample">サンプルで試す</button></div></div>`;
+    return;
+  }
+  if(selected && !groups.some(g => g.key === selected)) selected = null;
+  if(dim.type === 'bars'){ area.innerHTML = barsHTML(groups, T); return; }
+
+  // 目標との比較列（資産クラス・地域のみ）
+  let cmp = null;
+  if((dim.k === 'cls' || dim.k === 'reg') && Object.values(state.targets[dim.k] || {}).some(v => v !== '' && v !== null && v !== undefined)){
+    cmp = targetCompare(dim.k);
+  }
+  const cmpMap = {}; if(cmp) cmp.rows.forEach(r => cmpMap[r.k] = r);
+
+  const S = 240, cx = 120, cy = 120, R = 116, r = 74;
+  let a = -Math.PI / 2;
+  const paths = groups.map(g => {
+    const sweep = g.value / T * Math.PI * 2;
+    const d = arcPath(cx, cy, R, r, a, a + sweep); a += sweep;
+    const dimmed = selected && selected !== g.key;
+    return `<path d="${d}" fill-rule="evenodd" style="fill:${g.color};stroke:var(--surface);stroke-width:2;stroke-linejoin:round;opacity:${dimmed ? .3 : 1}"
+      data-key="${esc(g.key)}" aria-label="${esc(g.name)} ${pct(g.value / T)}"></path>`;
+  }).join('');
+  const sel = selected ? groups.find(g => g.key === selected) : null;
+  const center = sel
+    ? `<div class="c-lbl">${esc(sel.name)}</div><div class="c-val">${man(sel.value)}</div><div class="c-pct">${pct(sel.value / T)}</div>`
+    : `<div class="c-lbl">${esc(dim.n)}別・合計</div><div class="c-val">${man(T)}</div><div class="c-pct">${groups.length}区分</div>`;
+
+  const rows = groups.map(g => {
+    const c = cmpMap[g.key];
+    const cls = selected === g.key ? 'sel' : (selected ? 'dim' : '');
+    let extra = '';
+    if(cmp){
+      extra = c ? `<td class="num">${c.tRaw.toLocaleString('ja-JP')}%</td><td>${statusOf(c.diff).html}<span class="small muted num pt"> ${(c.diff * 100 >= 0 ? '+' : '') + (c.diff * 100).toFixed(1)}pt</span></td>`
+                : `<td class="muted">—</td><td class="small muted">対象外</td>`;
+    }
+    return `<tr class="lg-row ${cls}" tabindex="0" data-key="${esc(g.key)}">
+      <td><span class="lg-name"><span class="chip" style="background:${g.color}"></span>${esc(g.name)}</span><span class="sp-only small muted num lg-sub">${yen(g.value)}</span></td>
+      <td class="num col-amt">${yen(g.value)}</td><td class="num"><b>${pct(g.value / T)}</b></td>${extra}</tr>`;
+  }).join('');
+  const head = `<tr><th>区分</th><th class="col-amt">金額</th><th>比率</th>${cmp ? '<th>目標</th><th>目標との差</th>' : ''}</tr>`;
+  const foot = `<tr><td>合計<span class="sp-only small muted num lg-sub">${yen(T)}</span></td><td class="num col-amt">${yen(T)}</td><td class="num">100%</td>${cmp ? '<td></td><td></td>' : ''}</tr>`;
+  const cmpNote = cmp && cmp.excluded.length ? `<p class="small muted">※目標との差は、目標を設定していない区分（${cmp.excluded.map(esc).join('・')}）を除いた比率で比べています。</p>` : '';
+
+  let drill = '';
+  if(sel){
+    const items = Array.from(sel.items.entries()).map(([id, v]) => ({h:state.holdings.find(x => x.id === id), v})).filter(x => x.h).sort((a, b) => b.v - a.v);
+    drill = `<div class="drill"><h3>「${esc(sel.name)}」の内訳（${items.length}件）</h3><ul>${
+      items.map(x => `<li><span>${esc(x.h.name || '（名称未設定）')}${validSplit(x.h) ? ' <span class="small muted">（按分）</span>' : ''}</span><span class="num">${yen(x.v)}・${pct(x.v / sel.value)}</span></li>`).join('')
+    }</ul></div>`;
+  }
+
+  area.innerHTML = `<div class="chart-grid">
+    <div class="donut-box">
+      <svg viewBox="0 0 ${S} ${S}" role="img" aria-label="${esc(dim.n)}別の資産配分ドーナツグラフ">${paths}</svg>
+      <div class="donut-center">${center}</div>
+    </div>
+    <div style="min-width:0">
+      <div class="tbl-wrap"><table class="legend"><thead>${head}</thead><tbody>${rows}</tbody><tfoot>${foot}</tfoot></table></div>
+      ${cmpNote}
+      <p class="small muted" style="margin:6px 0 0">区分をタップすると、含まれている資産が表示されます。</p>
+      ${drill}
+    </div></div>`;
+}
+function barsHTML(groups, T){
+  const max = groups[0] ? groups[0].value : 1;
+  const legendCls = Array.from(new Set(groups.map(g => g.color)));
+  const usedCls = CLS.filter(c => legendCls.includes(colorOf('cls', c.k)));
+  return `<div class="bars">${groups.map(g => `
+    <div class="bar-row" data-tipname="${esc(g.name)}" data-tipval="${g.value}" data-tippct="${g.value / T}">
+      <span class="bn">${esc(g.name)}</span><span class="bv num"><b>${pct(g.value / T)}</b> <span class="small muted">${yen(g.value)}</span></span>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.max(.5, g.value / max * 100)}%;background:${g.color}"></div></div>
+    </div>`).join('')}</div>
+    <div class="hlegend">${usedCls.map(c => `<span><span class="chip" style="background:${colorOf('cls', c.k)}"></span>${c.n}</span>`).join('')}</div>
+    <p class="small muted">棒の色は資産クラスを表します。比率は総資産に対する割合です。</p>`;
+}
+
+/* ===== ツールチップ ===== */
+const tip = $('#tip');
+function showTip(html, x, y){
+  tip.innerHTML = html; tip.style.display = 'block';
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let left = x + 14, top = y + 14;
+  if(left + w > innerWidth - 8) left = x - w - 14;
+  if(top + h > innerHeight - 8) top = y - h - 14;
+  tip.style.left = Math.max(8, left) + 'px'; tip.style.top = Math.max(8, top) + 'px';
+}
+function hideTip(){ tip.style.display = 'none'; }
+
+$('#chartArea').addEventListener('pointermove', e => {
+  const p = e.target.closest('path[data-key]');
+  if(!p){ hideTip(); return; }
+  const g = aggregate(state.ui.dim).find(x => x.key === p.dataset.key); if(!g) return;
+  const T = total();
+  showTip(`<div class="t-title"><span class="chip" style="background:${g.color}"></span>${esc(g.name)}</div>
+    <div class="t-row"><span>金額</span><span class="num">${yen(g.value)}</span></div>
+    <div class="t-row"><span>比率</span><span class="num">${pct(g.value / T)}</span></div>`, e.clientX, e.clientY);
+});
+$('#chartArea').addEventListener('pointerleave', hideTip);
+$('#chartArea').addEventListener('click', e => {
+  const act = e.target.closest('[data-act]');
+  if(act){ handleAct(act.dataset.act); return; }
+  const t = e.target.closest('[data-key]');
+  if(t){ selected = selected === t.dataset.key ? null : t.dataset.key; renderChart(); }
+});
+$('#chartArea').addEventListener('keydown', e => {
+  const t = e.target.closest('tr[data-key]');
+  if(t && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); selected = selected === t.dataset.key ? null : t.dataset.key; renderChart();
+    const again = $(`#chartArea tr[data-key="${CSS.escape(t.dataset.key)}"]`); if(again) again.focus(); }
+});
+$('#dimSeg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  state.ui.dim = b.dataset.v; selected = null; save(); renderDimSeg(); renderChart();
+});
+
+/* ===== 株探へのリンク =====
+ * 株探は自動取得（スクレイピング）を禁止しているため、ツールは株探と通信しない。
+ * 利用者がページを開いて自分の目で確認するためのリンクだけを作る。 */
+function kabutanUrl(code){
+  const c = cleanCode(code);
+  if(/^[0-9][0-9A-Z]{3}$/.test(c)) return 'https://kabutan.jp/stock/?code=' + encodeURIComponent(c);   // 日本株（例: 7203, 130A）
+  if(/^[A-Z][A-Z.\-]{0,5}$/.test(c)) return 'https://us.kabutan.jp/stocks/' + encodeURIComponent(c);  // 米国株（例: AAPL）
+  return '';
+}
+function kabutanLink(code){
+  const u = kabutanUrl(code);
+  return u ? `<a class="kabu-link" href="${esc(u)}" target="_blank" rel="noopener noreferrer">株探で見る ↗</a>` : '<span class="kabu-link"></span>';
+}
+
+/* ===== 資産入力 ===== */
+function optList(list, v){ return list.map(x => `<option value="${x.k}" ${x.k === v ? 'selected' : ''}>${esc(x.n)}</option>`).join(''); }
+function holdingMeta(h){
+  const parts = [];
+  if(validSplit(h)) parts.push(`内訳あり（${h.split.length}区分）`);
+  else parts.push(`${nameOf(CLS, h.cls)}・${nameOf(REG, h.reg)}`);
+  if(h.tax && h.tax !== 'none') parts.push(nameOf(TAX, h.tax));
+  if(h.account) parts.push(h.account);
+  if(h.currency !== 'JPY') parts.push(nameOf(CUR, h.currency) + '建て');
+  if(h.mode === 'qty' && h.auto) parts.push('価格自動');
+  return parts.join(' / ');
+}
+function summaryHTML(h, T){
+  const v = jpyValue(h);
+  return `<span class="hs-chip" style="background:${colorOf('cls', mainCls(h))}"></span>
+    <span class="hs-name">${esc(h.name || '（名称未設定）')}</span>
+    <span class="hs-val"><b class="num">${man(v)}</b><small>${T > 0 ? pct(v / T) : ''}</small></span>
+    <span class="hs-meta">${esc(holdingMeta(h))}</span>`;
+}
+function bodyHTML(h){
+  const curName = nameOf(CUR, h.currency);
+  const unit = h.currency === 'JPY' ? '円' : curName;
+  const hasSplit = validSplit(h);
+  const native = nativeValue(h);
+  const calc = h.mode === 'qty' || h.currency !== 'JPY'
+    ? `<div class="field wide"><div class="calc">評価額: ${h.currency === 'JPY' ? '' : esc(fmtNum(native)) + ' ' + esc(curName) + ' × ' + esc(fmtNum(rateOf(h.currency))) + '円 = '}<b class="num">${state.ui.hide ? '••••' : fmtInt(jpyValue(h))}円</b></div></div>` : '';
+  return `<div class="fgrid">
+    <div class="field wide"><label>名称</label><input type="text" data-f="name" value="${esc(h.name)}" placeholder="例: 全世界株式インデックス"></div>
+    <div class="field wide"><span class="flbl">入力方法</span>
+      <div class="seg" data-f="mode"><button type="button" data-v="amount" aria-pressed="${h.mode === 'amount'}">評価額を入力</button><button type="button" data-v="qty" aria-pressed="${h.mode === 'qty'}">数量×単価</button></div></div>
+    <div class="field"><label>通貨</label><select data-f="currency" ${h.mode === 'qty' && h.auto ? 'disabled' : ''}>${optList(CUR, h.currency)}</select></div>
+    ${h.mode === 'amount'
+      ? `<div class="field"><label>評価額（${esc(unit)}）</label><input type="text" inputmode="decimal" data-f="amount" value="${h.amount ? esc(fmtNum(parseNum(h.amount))) : ''}" placeholder="例: 1,000,000"></div>`
+      : `<div class="field wide"><label>単価の自動取得</label><select data-f="auto"><option value="">しない（単価を手入力）</option>${Object.entries(AUTO_PRICES).map(([k, a]) => `<option value="${k}" ${h.auto === k ? 'selected' : ''}>${esc(a.n)}</option>`).join('')}</select>
+           <span class="hint">暗号資産と金・銀・プラチナは、最新の価格を自動で取得できます（株・投資信託は対象外です）</span></div>
+         <div class="field"><label>数量（${h.auto ? esc(AUTO_PRICES[h.auto].unit) : '口数・株数など'}）</label><input type="text" inputmode="decimal" data-f="qty" value="${h.qty ? esc(fmtNum(parseNum(h.qty))) : ''}" placeholder="例: 100"></div>
+         ${h.auto
+           ? `<div class="field"><span class="flbl">単価（円・自動取得）</span><div class="calc">${state.prices[h.auto] ? `<b class="num">${esc(fmtNum(state.prices[h.auto]))}円</b><br><span class="hint">${state.pricesUpdated ? esc(jpDate(state.pricesUpdated)) + '時点' : ''}</span>` : '<span class="hint">まだ取得していません</span>'}</div>
+              <button type="button" class="btn small" data-act="fetchPrice">最新の価格を取得</button></div>`
+           : `<div class="field"><label>単価（${esc(unit)}）</label><input type="text" inputmode="decimal" data-f="price" value="${h.price ? esc(fmtNum(parseNum(h.price))) : ''}" placeholder="例: 25,000"><span class="hint">投資信託は「1万口あたりの基準価額」なら、数量を口数÷10,000にします</span></div>`}`}
+    ${calc}
+    <div class="field"><label>資産クラス</label><select data-f="cls" ${hasSplit ? 'disabled' : ''}>${optList(CLS, h.cls)}</select></div>
+    <div class="field"><label>地域</label><select data-f="reg" ${hasSplit ? 'disabled' : ''}>${optList(REG, h.reg)}</select></div>
+    <div class="field wide"><button type="button" class="btn small" data-act="split">${hasSplit ? `内訳を編集（${h.split.length}区分に按分中）` : '内訳を設定（投資信託などを按分）'}</button>
+      ${hasSplit ? `<span class="hint">内訳が優先されるため、資産クラス・地域は使われません</span>` : ''}</div>
+    <div class="field"><label>金融機関</label><input type="text" data-f="account" list="acctList" value="${esc(h.account)}" placeholder="例: ○○証券"></div>
+    <div class="field"><label>口座区分</label><select data-f="tax">${optList(TAX, h.tax)}</select></div>
+    <div class="field"><label>取得額（円・任意）</label><input type="text" inputmode="numeric" data-f="cost" value="${h.cost ? esc(fmtInt(parseNum(h.cost))) : ''}" placeholder="含み損益・NISA枠の計算用"></div>
+    <div class="field"><label>銘柄コード・ティッカー（任意）</label><input type="text" data-f="code" value="${esc(h.code)}" placeholder="例: 7203 / AAPL" autocapitalize="characters" spellcheck="false">
+      <span class="hint">入れると株探のページを開くリンクが出ます ${kabutanLink(h.code)}</span></div>
+  </div>
+  ${h.importKey ? `<p class="small muted" style="margin:8px 0 0">楽天証券のCSVから取り込んだ銘柄です。次回の取り込みで評価額・取得額が更新されます（分類の変更はそのまま残ります）。</p>` : ''}
+  <div class="hactions"><button type="button" class="btn small" data-act="dup">複製</button><button type="button" class="btn small danger" data-act="del">削除</button>
+    <span class="spacer"></span><button type="button" class="btn small" data-act="close">閉じる</button></div>`;
+}
+function renderHoldings(openId){
+  const list = $('#hlist');
+  const T = total();
+  if(!state.holdings.length){
+    list.innerHTML = `<div class="empty"><p>「＋ 資産を追加」から、預金・投資信託・株式などを登録してください。</p><button class="btn" data-act="sample">サンプルデータで試す</button></div>`;
+    return;
+  }
+  const accts = accountOrder();
+  list.innerHTML = `<datalist id="acctList">${accts.map(a => `<option value="${esc(a)}">`).join('')}</datalist>` +
+    state.holdings.map(h => `<details class="hcard" data-id="${esc(h.id)}" ${h.id === openId ? 'open' : ''}>
+      <summary>${summaryHTML(h, T)}</summary><div class="hbody">${h.id === openId ? bodyHTML(h) : ''}</div></details>`).join('');
+}
+function refreshCardSummaries(){
+  const T = total();
+  $$('#hlist details.hcard').forEach(d => {
+    const h = state.holdings.find(x => x.id === d.dataset.id); if(!h) return;
+    $('summary', d).innerHTML = summaryHTML(h, T);
+  });
+}
+function refreshCalc(d, h){
+  const calcEl = $('.calc', d);
+  if(calcEl){
+    const curName = nameOf(CUR, h.currency);
+    calcEl.innerHTML = `評価額: ${h.currency === 'JPY' ? '' : esc(fmtNum(nativeValue(h))) + ' ' + esc(curName) + ' × ' + esc(fmtNum(rateOf(h.currency))) + '円 = '}<b class="num">${state.ui.hide ? '••••' : fmtInt(jpyValue(h))}円</b>`;
+  }
+}
+const hlist = $('#hlist');
+hlist.addEventListener('toggle', e => {
+  const d = e.target; if(!d.matches || !d.matches('details.hcard')) return;
+  if(d.open){
+    $$('#hlist details.hcard[open]').forEach(o => { if(o !== d) o.open = false; });
+    const h = state.holdings.find(x => x.id === d.dataset.id);
+    if(h) $('.hbody', d).innerHTML = bodyHTML(h);
+  }
+}, true);
+let chartTimer = null;
+function scheduleCharts(){ clearTimeout(chartTimer); chartTimer = setTimeout(renderCharts, 120); }
+hlist.addEventListener('input', e => {
+  const f = e.target.dataset.f; if(!f) return;
+  const d = e.target.closest('details.hcard'); const h = state.holdings.find(x => x.id === d.dataset.id); if(!h) return;
+  const v = e.target.value;
+  if(['amount', 'qty', 'price', 'cost'].includes(f)) h[f] = v.trim() === '' ? (f === 'cost' ? null : 0) : parseNum(v);
+  else if(f === 'code'){ h.code = cleanCode(v); const l = $('.kabu-link', d); if(l) l.outerHTML = kabutanLink(h.code); }
+  else h[f] = v;
+  if(['amount', 'qty', 'price'].includes(f)) h.updated = today();
+  save(); refreshCalc(d, h);
+  $('summary', d).innerHTML = summaryHTML(h, total());
+  scheduleCharts();
+});
+hlist.addEventListener('change', e => {
+  const f = e.target.dataset.f; if(!f) return;
+  const d = e.target.closest('details.hcard'); const h = state.holdings.find(x => x.id === d.dataset.id); if(!h) return;
+  if(e.target.tagName === 'SELECT'){
+    h[f] = e.target.value;
+    if(f === 'auto'){
+      if(h.auto){
+        h.currency = 'JPY';
+        if(state.prices[h.auto]){ h.price = state.prices[h.auto]; h.updated = state.pricesUpdated || today(); }
+        else toast('「最新の価格を取得」を押すと単価が入ります');
+      }
+    }
+    save();
+    if(f === 'currency' || f === 'auto') $('.hbody', d).innerHTML = bodyHTML(h);
+    refreshCardSummaries(); renderCharts();
+  }else if(['amount', 'qty', 'price'].includes(f) && e.target.value.trim() !== ''){
+    e.target.value = fmtNum(parseNum(e.target.value));
+  }else if(f === 'cost' && e.target.value.trim() !== ''){
+    e.target.value = fmtInt(parseNum(e.target.value));
+  }else if(f === 'account'){ refreshCardSummaries(); renderCharts(); }
+});
+hlist.addEventListener('click', async e => {
+  const segBtn = e.target.closest('[data-f="mode"] button');
+  const d = e.target.closest('details.hcard');
+  if(segBtn && d){
+    const h = state.holdings.find(x => x.id === d.dataset.id);
+    if(h.mode !== segBtn.dataset.v){
+      // 切替時に評価額を引き継ぐ
+      if(segBtn.dataset.v === 'amount'){ h.amount = nativeValue(h); }
+      else if(!h.qty && !h.price){ h.qty = 1; h.price = parseNum(h.amount); }
+      h.mode = segBtn.dataset.v; save();
+      $('.hbody', d).innerHTML = bodyHTML(h); refreshCardSummaries(); renderCharts();
+    }
+    return;
+  }
+  const act = e.target.closest('[data-act]'); if(!act) return;
+  if(!d){ handleAct(act.dataset.act); return; }
+  const h = state.holdings.find(x => x.id === d.dataset.id); if(!h) return;
+  const a = act.dataset.act;
+  if(a === 'close'){ d.open = false; }
+  else if(a === 'dup'){
+    const c = JSON.parse(JSON.stringify(h)); c.id = uid(); c.name = (h.name || '') + '（コピー）';
+    state.holdings.splice(state.holdings.indexOf(h) + 1, 0, c); save(); renderHoldings(c.id); renderCharts();
+  }else if(a === 'del'){
+    if(await confirmBox(`「${h.name || '名称未設定'}」を削除しますか？`, '資産の削除', '削除する')){
+      state.holdings = state.holdings.filter(x => x !== h); save(); renderHoldings(); renderCharts(); toast('削除しました');
+    }
+  }else if(a === 'split'){ openSplit(h); }
+  else if(a === 'fetchPrice'){ await updateRates(true); const b = $('.hbody', d); if(b && d.open) b.innerHTML = bodyHTML(h); }
+});
+$('#addBtn').addEventListener('click', () => {
+  const last = state.holdings[state.holdings.length - 1];
+  const h = fixHolding({account: last ? last.account : ''});
+  state.holdings.push(h); save(); renderHoldings(h.id);
+  const d = $(`#hlist details[data-id="${CSS.escape(h.id)}"]`);
+  if(d){ d.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(() => { const n = $('[data-f="name"]', d); if(n) n.focus({preventScroll:true}); }, 250); }
+  renderCharts();
+});
+$('#sortBtn').addEventListener('click', () => {
+  state.holdings.sort((a, b) => jpyValue(b) - jpyValue(a)); save(); renderHoldings(); toast('評価額の大きい順に並べ替えました');
+});
+
+/* ===== 単価・評価額をまとめて更新 ===== */
+function shortDate(d){ if(!isDate(d)) return ''; const [, m, dd] = d.split('-').map(Number); return `${m}/${dd}`; }
+function openBulk(){
+  if(!state.holdings.length){ toast('先に資産を登録してください'); return; }
+  $('#bulkRows').innerHTML = state.holdings.map(h => {
+    const auto = h.mode === 'qty' && h.auto;
+    const isQty = h.mode === 'qty';
+    const unit = h.currency === 'JPY' ? '円' : nameOf(CUR, h.currency);
+    const cur = isQty ? parseNum(h.price) : parseNum(h.amount);
+    return `<div class="bulk-row" data-id="${esc(h.id)}">
+      <div class="b-name">${esc(h.name || '（名称未設定）')}${h.code ? ` <span class="small muted">${esc(h.code)}</span>` : ''}${kabutanLink(h.code)}</div>
+      <div>${auto
+        ? `<span class="b-lbl">単価（自動取得）</span><div class="num" style="text-align:right">${state.prices[h.auto] ? esc(fmtNum(state.prices[h.auto])) + '円' : '未取得'}</div>`
+        : `<label class="b-lbl" for="bk-${esc(h.id)}">${isQty ? `単価（${esc(unit)}）` : `評価額（${esc(unit)}）`}</label>
+           <input type="text" inputmode="decimal" id="bk-${esc(h.id)}" data-bulk="${isQty ? 'price' : 'amount'}" data-orig="${esc(String(cur))}" value="${cur ? esc(fmtNum(cur)) : ''}">`}</div>
+      <div class="b-meta">${isQty ? `数量 ${esc(fmtNum(parseNum(h.qty)))} × 単価 → ` : ''}いま ${state.ui.hide ? '••••' : esc(fmtInt(jpyValue(h))) + '円'}${h.updated ? `・前回更新 ${esc(shortDate(h.updated))}` : ''}${h.account ? `・${esc(h.account)}` : ''}</div>
+    </div>`;
+  }).join('');
+  $('#bulkDlg').showModal();
+  const first = $('#bulkRows input'); if(first) first.focus();
+}
+$('#bulkBtn').addEventListener('click', openBulk);
+$('#bulkRows').addEventListener('keydown', e => {
+  if(e.key !== 'Enter' || !e.target.matches('input')) return;
+  e.preventDefault();
+  const inputs = $$('#bulkRows input'); const i = inputs.indexOf(e.target);
+  if(i >= 0 && i < inputs.length - 1){ inputs[i + 1].focus(); inputs[i + 1].select(); } else $('#bulkSave').focus();
+});
+$('#bulkRows').addEventListener('change', e => { if(e.target.matches('input') && e.target.value.trim() !== '') e.target.value = fmtNum(parseNum(e.target.value)); });
+$('#bulkCancel').addEventListener('click', () => $('#bulkDlg').close());
+$('#bulkSave').addEventListener('click', () => {
+  let n = 0;
+  $$('#bulkRows input[data-bulk]').forEach(inp => {
+    const row = inp.closest('.bulk-row'); const h = state.holdings.find(x => x.id === row.dataset.id); if(!h) return;
+    const v = inp.value.trim() === '' ? 0 : parseNum(inp.value);
+    if(Math.abs(v - parseNum(inp.dataset.orig)) < 1e-9) return;
+    h[inp.dataset.bulk] = v; h.updated = today(); n++;
+  });
+  $('#bulkDlg').close();
+  if(n){ save(); renderHoldings(); renderCharts(); }
+  toast(n ? `${n}件を更新しました` : '変更はありませんでした');
+});
+
+/* ===== 楽天証券のCSV取り込み =====
+ * 「保有商品一覧」→「すべて」のCSV（Shift_JIS）を読む。列の並びは見出しの名前で探すので、順番が変わっても読める。
+ * 取得額は「時価評価額[円] − 評価損益[円]」で計算する（投資信託の「1万口あたり」の単位の違いに左右されない）。 */
+function normHead(s){ return String(s || '').normalize('NFKC').replace(/\s/g, ''); }
+function findCol(hdr, names){
+  for(const n of names){ const i = hdr.indexOf(n); if(i >= 0) return i; }
+  for(const n of names){ const i = hdr.findIndex(h => h.startsWith(n)); if(i >= 0) return i; }
+  return -1;
+}
+function parseRakuten(text){
+  const rows = parseCSV(text), out = [];
+  let map = null;
+  for(const r of rows){
+    const cells = r.map(normHead);
+    if(cells[0] && /^[■□◆]/.test(cells[0])){ map = null; continue; }
+    if((cells.includes('銘柄') || cells.includes('銘柄名')) && cells.some(c => c.startsWith('時価評価額'))){
+      map = {
+        type:findCol(cells, ['種別', '商品']), code:findCol(cells, ['銘柄コード・ティッカー', '銘柄コード', 'ティッカー', 'コード']),
+        name:findCol(cells, ['銘柄', '銘柄名']), acct:findCol(cells, ['口座', '口座区分', '預り区分']),
+        qty:findCol(cells, ['保有数量', '数量']), value:findCol(cells, ['時価評価額[円]', '時価評価額(円)', '時価評価額']),
+        gain:findCol(cells, ['評価損益[円]', '評価損益(円)', '評価損益'])
+      };
+      continue;
+    }
+    if(!map || map.name < 0 || map.value < 0) continue;
+    const get = i => i >= 0 ? String(r[i] ?? '').normalize('NFKC').trim() : '';
+    const name = get(map.name), type = get(map.type);
+    if(!name || /合計|小計/.test(name + type)) continue;
+    const value = parseNum(get(map.value));
+    if(!(value > 0)) continue;
+    const g = get(map.gain);
+    const cost = g === '' || g === '-' || g === '--' ? null : Math.max(0, value - parseNum(g));
+    out.push({type, code:get(map.code), name, acct:get(map.acct), qty:parseNum(get(map.qty)), value, cost});
+  }
+  return out;
+}
+/** 種別・銘柄名から分類を推定する。推定できなければ needCheck=true */
+function inferClass(type, name){
+  const n = name.normalize('NFKC');
+  const P = i => ({split:PRESETS[i].rows.map(([cls, reg, pct]) => ({cls, reg, pct}))});
+  const R = (cls, reg) => ({cls, reg});
+  let r = null;
+  if(/預り金|MRF|現金|外貨預/.test(type)) r = R('cash', /米ドル|USD/.test(n + type) ? 'us' : 'jp');
+  else if(/国内株式|日本株|国内ETF/.test(type)) r = /REIT|リート|投資法人/i.test(n) ? R('realestate', 'jp') : R('stock', 'jp');
+  else if(/米国株式|米国ETF|外国株式|海外株式/.test(type)) r = /REIT|リート/i.test(n) ? R('realestate', 'us') : /債|BOND|BND|AGG|TLT/i.test(n) ? R('bond', 'us') : R('stock', 'us');
+  else if(/債券/.test(type)) r = R('bond', /国債|個人向け|社債/.test(n) && !/米国|外国/.test(n) ? 'jp' : /米国/.test(n) ? 'us' : 'other');
+  else if(/金・プラチナ|金地金|純金|プラチナ/.test(type)) r = R('gold', 'other');
+  if(r) return {...r, needCheck:false};
+  // 投資信託などは銘柄名から推定
+  if(/オール・?カントリー|全世界株|オルカン|ACWI/i.test(n)) r = P(0);
+  else if(/8資産|八資産/.test(n)) r = P(4);
+  else if(/4資産|四資産/.test(n)) r = P(5);
+  else if(/先進国債/.test(n)) r = P(6);
+  else if(/新興国債/.test(n)) r = R('bond', 'em');
+  else if(/米国債|米国債券|米国国債/.test(n)) r = R('bond', 'us');
+  else if(/国内債|日本債/.test(n)) r = R('bond', 'jp');
+  else if(/J-?REIT|Jリート|国内リート|日本リート/i.test(n)) r = R('realestate', 'jp');
+  else if(/リート|REIT/i.test(n)) r = R('realestate', /米国/.test(n) ? 'us' : 'other');
+  else if(/S&P\s?500|S&P500|米国株|全米|NASDAQ|ナスダック|ダウ|FANG/i.test(n)) r = R('stock', 'us');
+  else if(/先進国株|先進国\(除く日本\)|除く日本/.test(n)) r = P(1);
+  else if(/新興国株|新興国|インド|中国|ベトナム/.test(n)) r = R('stock', 'em');
+  else if(/日経|TOPIX|日本株|国内株|JPX|日本高配当/i.test(n)) r = R('stock', 'jp');
+  else if(/ゴールド|金先物|純金/.test(n)) r = R('gold', 'other');
+  if(r) return {...r, needCheck:false};
+  return {cls:'other', reg:'other', needCheck:true};
+}
+function taxFromRakuten(acct, type){
+  const a = acct.normalize('NFKC');
+  if(/預り金|MRF|現金/.test(type)) return 'none';
+  if(/NISA/i.test(a)){
+    if(/旧|ジュニア/.test(a)) return 'oldnisa';
+    if(/つみたて/.test(a)) return 'tsumitate';
+    return 'growth';
+  }
+  if(/特定/.test(a)) return 'tokutei';
+  if(/一般/.test(a)) return 'ippan';
+  return 'none';
+}
+let rakutenDraft = null;
+$('#rakutenBtn').addEventListener('click', () => $('#importRakuten').click());
+$('#importRakuten').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if(!f) return;
+  if(f.size > 10 * 1024 * 1024){ toast('ファイルが大きすぎます（10MBまで）'); return; }
+  let text;
+  const buf = await f.arrayBuffer();
+  try{ text = new TextDecoder('utf-8', {fatal:true}).decode(buf); }
+  catch(err){ try{ text = new TextDecoder('shift_jis').decode(buf); }catch(_){ toast('ファイルの文字コードを読み取れませんでした'); return; } }
+  text = text.replace(/^﻿/, '');
+  const rows = parseRakuten(text);
+  if(!rows.length){
+    $('#rakutenBody').innerHTML = `<div class="alert">保有銘柄を見つけられませんでした。</div>
+      <p class="small">楽天証券にログインし、「口座管理」→「保有商品一覧」→「すべて」の画面で「CSVで保存」を押してダウンロードしたファイルを、そのまま（Excelで開いて保存し直さずに）選んでください。</p>`;
+    $('#rakutenApply').hidden = true; rakutenDraft = null; $('#rakutenDlg').showModal(); return;
+  }
+  const items = rows.map(r => {
+    const key = `rakuten|${r.type}|${r.code || r.name}|${r.acct}`;
+    const existing = state.holdings.find(h => h.importKey === key);
+    return {...r, key, existing, inf:inferClass(r.type, r.name), tax:taxFromRakuten(r.acct, r.type)};
+  });
+  const keys = new Set(items.map(i => i.key));
+  const gone = state.holdings.filter(h => h.importKey.startsWith('rakuten|') && !keys.has(h.importKey));
+  const nNew = items.filter(i => !i.existing).length, nUpd = items.length - nNew, nChk = items.filter(i => !i.existing && i.inf.needCheck).length;
+  rakutenDraft = {items, gone};
+  $('#rakutenBody').innerHTML = `
+    <p class="small" style="margin-top:0"><b>${items.length}銘柄</b>を読み取りました（新規 ${nNew}件・更新 ${nUpd}件）。評価額は円換算の時価評価額、取得額は「時価評価額 − 評価損益」で入ります。</p>
+    ${nChk ? `<div class="alert">分類を推定できなかった銘柄が${nChk}件あります（<span class="tag-warn">要確認</span>）。取り込んだあと「資産入力」で資産クラス・地域を設定してください。</div>` : ''}
+    <div class="rk-list">
+    ${items.map(i => `<div class="rk-item">
+      <div class="rk-top"><span class="rk-name">${esc(i.name)}</span><span class="num rk-val">${state.ui.hide ? '••••' : esc(fmtInt(i.value)) + '円'}</span></div>
+      <div class="small muted">${esc(i.type)}${i.code ? '・' + esc(i.code) : ''}・${esc(nameOf(TAX, i.tax))}・${i.existing ? '更新' : '新規'}</div>
+      <div class="small">分類: ${i.existing ? '<span class="muted">いまの設定のまま</span>' : i.inf.needCheck ? '<span class="tag-warn">要確認</span>' : i.inf.split ? '按分（' + esc(i.inf.split.length) + '区分）' : esc(nameOf(CLS, i.inf.cls) + '・' + nameOf(REG, i.inf.reg))}</div>
+    </div>`).join('')}
+    </div>
+    ${gone.length ? `<label class="ack"><input type="checkbox" id="rakutenRemoveGone"><span>前回取り込んだ楽天証券の銘柄のうち、今回のCSVにない${gone.length}件（売却済みの可能性）を削除する：${gone.map(h => esc(h.name)).join('、')}</span></label>` : ''}`;
+  $('#rakutenApply').hidden = false;
+  $('#rakutenDlg').showModal();
+});
+$('#rakutenCancel').addEventListener('click', () => { rakutenDraft = null; $('#rakutenDlg').close(); });
+$('#rakutenApply').addEventListener('click', () => {
+  if(!rakutenDraft) return;
+  const {items, gone} = rakutenDraft;
+  let nNew = 0, nUpd = 0;
+  items.forEach(i => {
+    if(i.existing && state.holdings.includes(i.existing)){
+      Object.assign(i.existing, {mode:'amount', amount:i.value, currency:'JPY', cost:i.cost, updated:today()});
+      if(i.code) i.existing.code = cleanCode(i.code);
+      nUpd++;
+    }else{
+      state.holdings.push(fixHolding({name:i.name, mode:'amount', amount:i.value, currency:'JPY', cls:i.inf.cls, reg:i.inf.reg, split:i.inf.split || null,
+        account:'楽天証券', tax:i.tax, cost:i.cost, code:i.code, importKey:i.key, updated:today()}));
+      nNew++;
+    }
+  });
+  let nDel = 0;
+  const rm = $('#rakutenRemoveGone');
+  if(rm && rm.checked){ const g = new Set(gone); state.holdings = state.holdings.filter(h => !g.has(h)); nDel = gone.length; }
+  rakutenDraft = null; $('#rakutenDlg').close();
+  save(); renderHoldings(); renderCharts();
+  toast(`楽天証券のCSVを取り込みました（新規${nNew}件・更新${nUpd}件${nDel ? `・削除${nDel}件` : ''}）`);
+});
+
+/* ===== 内訳（按分）ダイアログ ===== */
+let splitTarget = null, splitDraft = [];
+function openSplit(h){
+  splitTarget = h;
+  splitDraft = validSplit(h) ? h.split.map(r => ({...r})) : [{cls:h.cls, reg:h.reg, pct:100}];
+  $('#splitPreset').innerHTML = `<option value="">プリセットを選ぶ（目安の比率）</option>` + PRESETS.map((p, i) => `<option value="${i}">${esc(p.n)}</option>`).join('');
+  renderSplitRows(); $('#splitDlg').showModal();
+}
+function renderSplitRows(){
+  $('#splitRows').innerHTML = splitDraft.map((r, i) => `<div class="split-row" data-i="${i}">
+    <select data-s="cls" aria-label="資産クラス">${optList(CLS, r.cls)}</select>
+    <select data-s="reg" aria-label="地域">${optList(REG, r.reg)}</select>
+    <input type="text" inputmode="decimal" data-s="pct" value="${esc(r.pct)}" aria-label="比率">
+    <button type="button" class="iconbtn" data-s="del" aria-label="この行を削除">×</button></div>`).join('');
+  updateSplitSum();
+}
+function updateSplitSum(){
+  const s = splitDraft.reduce((a, r) => a + parseNum(r.pct), 0);
+  $('#splitSum').innerHTML = `合計 <b class="num">${(Math.round(s * 100) / 100).toLocaleString('ja-JP')}%</b>${Math.abs(s - 100) > 0.01 ? ' <span class="muted">（自動で100%に換算）</span>' : ''}`;
+}
+$('#splitRows').addEventListener('input', e => {
+  const row = e.target.closest('.split-row'); if(!row) return;
+  const r = splitDraft[+row.dataset.i]; const k = e.target.dataset.s;
+  if(k === 'pct') r.pct = parseNum(e.target.value); else if(k) r[k] = e.target.value;
+  updateSplitSum();
+});
+$('#splitRows').addEventListener('change', e => {
+  const row = e.target.closest('.split-row'); if(!row) return;
+  const k = e.target.dataset.s; if(k === 'cls' || k === 'reg') splitDraft[+row.dataset.i][k] = e.target.value;
+});
+$('#splitRows').addEventListener('click', e => {
+  if(e.target.dataset.s !== 'del') return;
+  splitDraft.splice(+e.target.closest('.split-row').dataset.i, 1); renderSplitRows();
+});
+$('#splitAdd').addEventListener('click', () => { splitDraft.push({cls:'stock', reg:'jp', pct:0}); renderSplitRows(); });
+$('#splitApplyPreset').addEventListener('click', () => {
+  const i = $('#splitPreset').value; if(i === '') { toast('プリセットを選んでください'); return; }
+  splitDraft = PRESETS[+i].rows.map(([cls, reg, p]) => ({cls, reg, pct:p})); renderSplitRows();
+});
+$('#splitCancel').addEventListener('click', () => $('#splitDlg').close());
+$('#splitClear').addEventListener('click', () => {
+  splitTarget.split = null; save(); $('#splitDlg').close(); afterSplit();
+});
+$('#splitSave').addEventListener('click', () => {
+  const rows = splitDraft.filter(r => parseNum(r.pct) > 0).map(r => ({cls:r.cls, reg:r.reg, pct:parseNum(r.pct)}));
+  if(!rows.length){ toast('比率を1つ以上入力してください'); return; }
+  // 1行だけなら内訳ではなく通常の分類として保存
+  if(rows.length === 1){ splitTarget.cls = rows[0].cls; splitTarget.reg = rows[0].reg; splitTarget.split = null; }
+  else splitTarget.split = rows;
+  save(); $('#splitDlg').close(); afterSplit();
+});
+function afterSplit(){
+  const d = $(`#hlist details[data-id="${CSS.escape(splitTarget.id)}"]`);
+  if(d) $('.hbody', d).innerHTML = bodyHTML(splitTarget);
+  refreshCardSummaries(); renderCharts();
+}
+
+/* ===== 目標配分 ===== */
+const TARGET_PRESETS = {
+  reg: {n:'全世界の時価総額に近い比率（目安）', v:{jp:5, us:64, dev:20, em:11}}
+};
+function renderTargets(){
+  $('#threshold').value = state.threshold;
+  $('#targetTables').innerHTML = ['cls', 'reg'].map(axis => {
+    const list = DEFS[axis]; const tg = state.targets[axis] || {};
+    const cmp = targetCompare(axis);
+    const cm = {}; cmp.rows.forEach(r => cm[r.k] = r);
+    const agg = {}; aggregate(axis).forEach(g => agg[g.key] = g.value);
+    const T = total();
+    const sumOk = cmp.rows.length === 0 || Math.abs(cmp.sumT - 100) < 0.01;
+    const preset = TARGET_PRESETS[axis];
+    return `<div>
+      <div class="row" style="margin-bottom:6px"><h3 style="font-size:15px;margin:0">${axis === 'cls' ? '資産クラス' : '地域'}の目標</h3><span class="spacer"></span>
+        ${preset ? `<button class="btn small" data-preset="${axis}" title="${esc(preset.n)}">時価総額比の目安を入れる</button>` : ''}
+        <button class="btn small" data-clear="${axis}">クリア</button></div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>区分</th><th>現在（全体）</th><th>目標%</th><th>状態</th></tr></thead><tbody>
+      ${list.map(c => {
+        const r = cm[c.k]; const v = tg[c.k];
+        return `<tr><td><span class="chip" style="background:${colorOf(axis, c.k)}"></span>${esc(c.n)}</td>
+          <td class="num">${T > 0 ? pct((agg[c.k] || 0) / T) : '—'}</td>
+          <td><input type="text" inputmode="decimal" data-axis="${axis}" data-k="${c.k}" value="${v === undefined || v === null ? '' : esc(v)}" placeholder="—" aria-label="${esc(c.n)}の目標%（空欄は対象外）"></td>
+          <td>${r ? statusOf(r.diff).html : '<span class="small muted">対象外</span>'}</td></tr>`;
+      }).join('')}
+      </tbody><tfoot><tr><td>目標の合計</td><td></td><td class="num ${sumOk ? '' : 'neg'}">${(Math.round(cmp.sumT * 100) / 100).toLocaleString('ja-JP')}%</td><td></td></tr></tfoot></table></div>
+      ${!sumOk ? `<div class="alert">目標の合計が100%ではありません。計算では合計が100%になるように換算します。</div>` : ''}
+    </div>`;
+  }).join('');
+}
+$('#targetTables').addEventListener('change', e => {
+  const t = e.target; if(!t.dataset.axis) return;
+  const v = t.value.trim();
+  if(v === '') delete state.targets[t.dataset.axis][t.dataset.k];
+  else state.targets[t.dataset.axis][t.dataset.k] = Math.max(0, parseNum(v));
+  save(); renderTargets(); renderRebalance(); renderChart();
+});
+$('#targetTables').addEventListener('click', e => {
+  const p = e.target.closest('[data-preset]'), c = e.target.closest('[data-clear]');
+  if(p){ state.targets[p.dataset.preset] = {...TARGET_PRESETS[p.dataset.preset].v}; }
+  else if(c){ state.targets[c.dataset.clear] = {}; }
+  else return;
+  save(); renderTargets(); renderRebalance(); renderChart();
+});
+$('#threshold').addEventListener('change', e => {
+  state.threshold = Math.max(0, parseNum(e.target.value)); save(); renderTargets(); renderRebalance(); renderChart();
+});
+
+/* ===== リバランス ===== */
+const MODE_NOTE = {
+  add: '保有資産は売らずに、追加資金を「目標より少ない区分」から順に割り振ります。NISAの非課税メリットを崩さず、売買手数料・税金もかかりません。',
+  trade: '多すぎる区分を売り、少ない区分を買って目標どおりにします。課税口座で利益が出ている資産を売ると税金がかかる点に注意してください。追加資金も同時に入れられます。',
+  withdraw: '生活費などで資産を取り崩すときに、「目標より多い区分」から順に売る金額を計算します。'
+};
+function renderRebalance(){
+  setSeg($('#rbAxis'), state.ui.rbAxis); setSeg($('#rbMode'), state.ui.rbMode);
+  const mode = state.ui.rbMode;
+  $('#rbAmountLbl').textContent = mode === 'withdraw' ? '取り崩す金額（円）' : mode === 'trade' ? '追加で投資する金額（円・任意）' : '追加で投資する金額（円）';
+  $('#rbModeNote').textContent = MODE_NOTE[mode];
+  const out = $('#rbResult');
+  const axisName = state.ui.rbAxis === 'cls' ? '資産クラス' : '地域';
+  const amount = parseNum($('#rbAmount').value);
+  const res = rebalance(state.ui.rbAxis, mode, amount);
+  if(!res.rows.length){ out.innerHTML = `<div class="info">「目標配分」で${axisName}の目標を入力すると計算できます。</div>`; return; }
+  if(res.base <= 0 && mode !== 'trade' && mode !== 'add'){ out.innerHTML = `<div class="info">対象の資産がありません。</div>`; return; }
+  if((mode === 'add' || mode === 'withdraw') && amount <= 0){
+    out.innerHTML = `<div class="info">${mode === 'add' ? '追加で投資する' : '取り崩す'}金額を入力してください。</div>` + driftTable(res);
+    return;
+  }
+  const rows = res.rows.map(r => `<tr><td><span class="chip" style="background:${r.color}"></span>${esc(r.n)}</td>
+    <td class="num col-amt">${yen(r.cur)}</td><td class="num">${pct(r.a)}</td><td class="num">${pct(r.t)}</td>
+    <td class="num ${r.adj > 0.5 ? 'buy' : r.adj < -0.5 ? 'sell' : ''}">${Math.abs(r.adj) < 0.5 ? '—' : (r.adj > 0 ? '買う ' : '売る ') + (state.ui.hide ? '••••円' : fmtInt(Math.abs(r.adj)) + '円')}</td>
+    <td class="num col-amt">${pct(r.after)}</td></tr>`).join('');
+  const buy = res.rows.reduce((a, r) => a + Math.max(0, r.adj), 0), sell = res.rows.reduce((a, r) => a + Math.max(0, -r.adj), 0);
+  out.innerHTML = `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>区分</th><th class="col-amt">現在の金額</th><th>現在</th><th>目標</th><th>調整額</th><th class="col-amt">調整後</th></tr></thead>
+    <tbody>${rows}</tbody><tfoot><tr><td>合計</td><td class="num col-amt">${yen(res.base)}</td><td></td><td></td>
+    <td class="num">${buy > 0.5 ? '買い ' + yen(buy) : ''}${buy > 0.5 && sell > 0.5 ? '<br>' : ''}${sell > 0.5 ? '売り ' + yen(sell) : ''}</td><td class="col-amt"></td></tr></tfoot></table></div>
+    ${res.excluded.length ? `<p class="small muted">※目標を設定していない区分（${res.excluded.map(esc).join('・')}）は計算の対象外です。比率は対象の区分の合計（${yen(res.base)}）に対する割合です。</p>` : ''}
+    ${mode === 'add' && res.rows.some(r => r.after - r.t > state.threshold / 100) ? `<div class="alert">追加資金だけでは目標に届かない区分があります。「売買で調整」も検討してください。</div>` : ''}
+    <p class="small muted">計算結果は目安です。実際の売買は手数料・税金・最低購入単位を考慮してください。</p>`;
+}
+function driftTable(res){
+  return `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>区分</th><th>現在</th><th>目標</th><th>差</th><th>状態</th></tr></thead><tbody>${
+    res.rows.map(r => `<tr><td><span class="chip" style="background:${r.color}"></span>${esc(r.n)}</td><td class="num">${pct(r.a)}</td><td class="num">${pct(r.t)}</td>
+      <td class="num">${(r.diff * 100 >= 0 ? '+' : '') + (r.diff * 100).toFixed(1)}pt</td><td>${statusOf(r.diff).html}</td></tr>`).join('')
+  }</tbody></table></div>`;
+}
+$('#rbAxis').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; state.ui.rbAxis = b.dataset.v; save(); renderRebalance(); });
+$('#rbMode').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; state.ui.rbMode = b.dataset.v; save(); renderRebalance(); });
+$('#rbAmount').addEventListener('input', () => renderRebalance());
+$('#rbAmount').addEventListener('change', e => { if(e.target.value.trim()) e.target.value = fmtInt(parseNum(e.target.value)); });
+
+/* ===== 推移 ===== */
+function makeSnapshot(){
+  const s = {date:today(), total:total(), cls:{}, reg:{}};
+  aggregate('cls').forEach(g => s.cls[g.key] = Math.round(g.value));
+  aggregate('reg').forEach(g => s.reg[g.key] = Math.round(g.value));
+  return s;
+}
+$('#snapBtn').addEventListener('click', async () => {
+  if(!state.holdings.length){ toast('先に資産を入力してください'); return; }
+  const s = makeSnapshot();
+  const i = state.snapshots.findIndex(x => x.date === s.date);
+  if(i >= 0){
+    if(!await confirmBox('今日の記録はすでにあります。上書きしますか？', '記録の上書き', '上書きする')) return;
+    state.snapshots[i] = s;
+  }else state.snapshots.push(s);
+  state.snapshots.sort((a, b) => a.date.localeCompare(b.date));
+  save(); renderHistory(); toast(`${jpDate(s.date)}の状態を記録しました`);
+});
+function niceMax(v){
+  if(v <= 0) return 1;
+  const p = Math.pow(10, Math.floor(Math.log10(v))); const n = v / p;
+  const m = [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find(x => n <= x + 1e-9);
+  return m * p;
+}
+function axisMan(v){
+  if(v >= 1e8) return (v / 1e8).toLocaleString('ja-JP', {maximumFractionDigits:1}) + '億';
+  if(v >= 1e4) return Math.round(v / 1e4).toLocaleString('ja-JP') + '万';
+  return fmtInt(v);
+}
+function renderHistory(){
+  setSeg($('#hsAxis'), state.ui.hsAxis); setSeg($('#hsMode'), state.ui.hsMode);
+  const snaps = state.snapshots;
+  const last = snaps[snaps.length - 1];
+  $('#snapInfo').textContent = last
+    ? `最後の記録: ${jpDate(last.date)}。月に1回など、決まったタイミングで記録すると推移がわかります（同じ日の記録は上書き）。`
+    : '月に1回など、決まったタイミングで記録すると推移がわかります。同じ日に記録した場合は上書きされます。';
+  renderSnapTable();
+  const box = $('#hchart'), lg = $('#hlegend');
+  if(!snaps.length){ box.innerHTML = `<div class="empty"><p>まだ記録がありません。「今日の状態を記録」を押すと、ここに推移が表示されます。</p></div>`; lg.innerHTML = ''; return; }
+  const axis = state.ui.hsAxis, ratio = state.ui.hsMode === 'ratio';
+  const list = DEFS[axis];
+  const used = list.filter(c => snaps.some(s => (s[axis] || {})[c.k] > 0));
+  const view = snaps.slice(-36);
+  const W = Math.max(320, box.clientWidth || 640), H = 280, ml = 52, mr = 8, mt = 12, mb = 34;
+  const pw = W - ml - mr, ph = H - mt - mb;
+  const totals = view.map(s => used.reduce((a, c) => a + ((s[axis] || {})[c.k] || 0), 0));
+  const ymax = ratio ? 1 : niceMax(Math.max(...totals));
+  const ticks = 4;
+  let g = '';
+  for(let i = 0; i <= ticks; i++){
+    const v = ymax * i / ticks, y = mt + ph - ph * i / ticks;
+    g += `<line x1="${ml}" x2="${W - mr}" y1="${y}" y2="${y}" stroke="var(--grid)" stroke-width="1"/>`;
+    const lbl = ratio ? Math.round(v * 100) + '%' : (state.ui.hide ? '•••' : axisMan(v));
+    g += `<text x="${ml - 6}" y="${y + 4}" text-anchor="end" font-size="11" fill="var(--axis-ink)" style="font-variant-numeric:tabular-nums">${lbl}</text>`;
+  }
+  g += `<line x1="${ml}" x2="${W - mr}" y1="${mt + ph}" y2="${mt + ph}" stroke="var(--axis)" stroke-width="1"/>`;
+  const band = pw / view.length, bw = Math.min(44, band * 0.62);
+  const every = Math.ceil(view.length / Math.max(1, Math.floor(pw / 56)));
+  view.forEach((s, i) => {
+    const x = ml + band * i + (band - bw) / 2;
+    const tot = totals[i];
+    let y = mt + ph;
+    const segs = used.filter(c => ((s[axis] || {})[c.k] || 0) > 0);
+    segs.forEach((c, j) => {
+      const v = (s[axis] || {})[c.k];
+      const h = ph * (ratio ? (tot > 0 ? v / tot : 0) : v / ymax);
+      const top = j === segs.length - 1;
+      const hh = Math.max(0, h - (top ? 0 : 2));
+      y -= h;
+      if(hh <= 0) return;
+      if(top){
+        const rr = Math.min(4, hh, bw / 2);
+        g += `<path d="M${x} ${y + hh}V${y + rr}Q${x} ${y} ${x + rr} ${y}H${x + bw - rr}Q${x + bw} ${y} ${x + bw} ${y + rr}V${y + hh}Z" style="fill:${colorOf(axis, c.k)}"/>`;
+      }else g += `<rect x="${x}" y="${y + 2}" width="${bw}" height="${hh}" style="fill:${colorOf(axis, c.k)}"/>`;
+    });
+    if(i % every === 0 || i === view.length - 1){
+      const [yy, mm, dd] = s.date.split('-').map(Number);
+      g += `<text x="${x + bw / 2}" y="${H - mb + 16}" text-anchor="middle" font-size="11" fill="var(--axis-ink)">${mm}/${dd}</text>`;
+      if(i === 0 || view[i - 1].date.slice(0, 4) !== s.date.slice(0, 4))
+        g += `<text x="${x + bw / 2}" y="${H - mb + 30}" text-anchor="middle" font-size="10" fill="var(--axis-ink)">${yy}年</text>`;
+    }
+    g += `<rect x="${ml + band * i}" y="${mt}" width="${band}" height="${ph}" fill="transparent" data-si="${snaps.length - view.length + i}" style="cursor:default"/>`;
+  });
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${axis === 'cls' ? '資産クラス' : '地域'}別の資産推移（積み上げ棒グラフ）">${g}</svg>`;
+  lg.innerHTML = used.slice().reverse().map(c => `<span><span class="chip" style="background:${colorOf(axis, c.k)}"></span>${esc(c.n)}</span>`).join('');
+}
+$('#hchart').addEventListener('pointermove', e => {
+  const r = e.target.closest('[data-si]'); if(!r){ hideTip(); return; }
+  const s = state.snapshots[+r.dataset.si]; if(!s) return;
+  const axis = state.ui.hsAxis; const list = DEFS[axis];
+  const tot = list.reduce((a, c) => a + ((s[axis] || {})[c.k] || 0), 0);
+  const rows = list.filter(c => (s[axis] || {})[c.k] > 0).map(c => `<div class="t-row"><span><span class="chip" style="background:${colorOf(axis, c.k)}"></span>${esc(c.n)}</span><span class="num">${state.ui.hsMode === 'ratio' ? pct(s[axis][c.k] / tot) : man(s[axis][c.k])}</span></div>`).join('');
+  showTip(`<div class="t-title">${jpDate(s.date)}</div><div class="t-row"><span>合計</span><span class="num"><b>${man(tot)}</b></span></div>${rows}`, e.clientX, e.clientY);
+});
+$('#hchart').addEventListener('pointerleave', hideTip);
+function renderSnapTable(){
+  const snaps = state.snapshots;
+  if(!snaps.length){ $('#snapTable').innerHTML = '<p class="small muted">記録はまだありません。</p>'; return; }
+  const rows = snaps.map((s, i) => {
+    const prev = snaps[i - 1];
+    const diff = prev ? s.total - prev.total : null;
+    return `<tr><td>${jpDate(s.date)}</td><td class="num">${yen(s.total)}</td>
+      <td class="num ${diff > 0 ? 'pos' : diff < 0 ? 'neg' : ''}">${diff === null ? '—' : signedYen(diff)}</td>
+      <td class="num">${diff === null || prev.total <= 0 ? '—' : ((diff >= 0 ? '+' : '') + (diff / prev.total * 100).toFixed(1) + '%')}</td>
+      <td><button class="btn small danger" data-delsnap="${esc(s.date)}">削除</button></td></tr>`;
+  }).reverse().join('');
+  $('#snapTable').innerHTML = `<table class="tbl"><thead><tr><th>日付</th><th>総資産</th><th>前回との差</th><th>増減率</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+$('#snapTable').addEventListener('click', async e => {
+  const b = e.target.closest('[data-delsnap]'); if(!b) return;
+  if(await confirmBox(`${jpDate(b.dataset.delsnap)}の記録を削除しますか？`, '記録の削除', '削除する')){
+    state.snapshots = state.snapshots.filter(s => s.date !== b.dataset.delsnap); save(); renderHistory();
+  }
+});
+$('#hsAxis').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; state.ui.hsAxis = b.dataset.v; save(); renderHistory(); });
+$('#hsMode').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; state.ui.hsMode = b.dataset.v; save(); renderHistory(); });
+let resizeTimer = null;
+addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if($('#panel-history').classList.contains('active')) renderHistory(); }, 150); });
+
+/* ===== 為替レートの自動取得 =====
+ * 送るのは「どの通貨のレートか」だけ（資産データは送らない）。通信先は CSP で次の2か所に限定している。
+ *  1. Frankfurter（欧州中央銀行などの公表レート）… ユーロ基準で取り、円に換算（有効桁数が多いため）
+ *  2. Currency API（市場レート）… 1がつながらないときの予備
+ */
+const FX_CODES = ['USD', 'EUR', 'GBP', 'AUD', 'CAD', 'CHF'];
+const FX_INTERVAL = 6 * 60 * 60 * 1000;
+let fxBusy = false, fxError = '';
+function hasForeign(){ return state.holdings.some(h => h.currency !== 'JPY'); }
+function needPrices(){ return state.holdings.some(h => h.mode === 'qty' && h.auto); }
+function rateLabel(short){
+  const d = state.ratesUpdated;
+  if(!d) return short ? '仮の値（未更新）' : 'まだ更新されていません（初期値は仮の値です）。';
+  const [, m, dd] = d.split('-').map(Number);
+  const src = {ecb:'欧州中央銀行などの公表レート', market:'市場レート', manual:'手入力'}[state.ratesSource];
+  return short ? `${m}/${dd}時点（${src}）` : `${jpDate(d)}時点のレート（${src}）`;
+}
+async function getJSON(url){
+  const ac = new AbortController(); const timer = setTimeout(() => ac.abort(), 8000);
+  try{
+    const r = await fetch(url, {signal:ac.signal, credentials:'omit', referrerPolicy:'no-referrer', cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    const text = await r.text();
+    if(text.length > 500000) throw new Error('too large');
+    return JSON.parse(text);
+  }finally{ clearTimeout(timer); }
+}
+async function fetchFromEcb(){
+  const j = await getJSON('https://api.frankfurter.dev/v1/latest?base=EUR&symbols=JPY,' + FX_CODES.filter(c => c !== 'EUR').join(','));
+  if(!isObj(j) || !isObj(j.rates) || typeof j.rates.JPY !== 'number') throw new Error('format');
+  const out = {};
+  FX_CODES.forEach(c => { const per = c === 'EUR' ? 1 : j.rates[c]; if(typeof per === 'number' && per > 0) out[c] = j.rates.JPY / per; });
+  return {rates:out, date:isDate(j.date) ? j.date : today(), source:'ecb'};
+}
+async function getMarketJSON(){
+  const j = await getJSON('https://latest.currency-api.pages.dev/v1/currencies/jpy.min.json');
+  if(!isObj(j) || !isObj(j.jpy)) throw new Error('format');
+  return j;
+}
+function ratesFromMarket(j){
+  const out = {};
+  FX_CODES.forEach(c => { const v = j.jpy[c.toLowerCase()]; if(typeof v === 'number' && v > 0) out[c] = 1 / v; });
+  return {rates:out, date:isDate(j.date) ? j.date : today(), source:'market'};
+}
+/** 暗号資産・貴金属の円建て価格。範囲外の値は捨てる */
+function pricesFromMarket(j){
+  const out = {};
+  Object.entries(AUTO_PRICES).forEach(([k, a]) => {
+    const v = j.jpy[k.toLowerCase()];
+    if(typeof v !== 'number' || !(v > 0)) return;
+    const per = a.oz ? 1 / v / TROY_OZ_G : 1 / v;
+    if(isFinite(per) && per >= a.min && per <= a.max) out[k] = Math.round(per * 100) / 100;
+  });
+  return {prices:out, date:isDate(j.date) ? j.date : today()};
+}
+/** ありえない値（壊れた・改ざんされた応答）は使わない: 1通貨あたり1円〜2,000円の範囲だけ受け付ける */
+function validRate(v){ return typeof v === 'number' && isFinite(v) && v >= 1 && v <= 2000; }
+async function updateRates(manual){
+  if(fxBusy || locked) return;
+  fxBusy = true; fxError = ''; renderFxStatus();
+  let res = null, market = null, pres = null;
+  try{ const r = await fetchFromEcb(); if(FX_CODES.every(c => validRate(r.rates[c]))) res = r; }catch(e){}
+  if(!res){ try{ market = await getMarketJSON(); const r = ratesFromMarket(market); if(FX_CODES.every(c => validRate(r.rates[c]))) res = r; }catch(e){} }
+  const wantPrices = needPrices();
+  if(wantPrices){ try{ market = market || await getMarketJSON(); pres = pricesFromMarket(market); }catch(e){} }
+  fxBusy = false;
+  if(locked){ renderFxStatus(); return; } // 取得中にロックされたら結果は捨てる
+  const msgs = [];
+  if(res){
+    FX_CODES.forEach(c => state.rates[c] = Math.round(res.rates[c] * 100) / 100);
+    state.ratesUpdated = res.date; state.ratesSource = res.source; state.ratesFetchedAt = Date.now();
+    msgs.push(`1米ドル＝${fmtNum(state.rates.USD)}円`);
+  }
+  let priceMissing = false;
+  if(pres){
+    Object.assign(state.prices, pres.prices); state.pricesUpdated = pres.date;
+    state.holdings.forEach(h => {
+      if(h.mode !== 'qty' || !h.auto) return;
+      if(pres.prices[h.auto]){ h.price = pres.prices[h.auto]; h.updated = today(); } else priceMissing = true;
+    });
+    if(state.prices.BTC) msgs.push(`1BTC＝${fmtInt(state.prices.BTC)}円`);
+  }
+  fxError = !res ? '為替レートを取得できませんでした。前回の値を使っています（インターネットにつながっているか確認してください）。'
+          : (wantPrices && (!pres || priceMissing)) ? '一部の価格を取得できませんでした。前回の値を使っています。' : '';
+  if(res || pres){ save(); renderSettings(); renderCharts(); refreshCardSummaries(); }
+  renderFxStatus();
+  const open = $('#hlist details[open]');
+  if(open){ const h = state.holdings.find(x => x.id === open.dataset.id); if(h) refreshCalc(open, h); }
+  if(manual) toast(msgs.length ? `更新しました（${msgs.join('・')}）` : '取得できませんでした');
+}
+/** 自動取得がオンで、前回から6時間以上たっていれば取得する */
+function autoUpdateRates(){
+  if(!locked && state.ui.fxAuto === true && Date.now() - state.ratesFetchedAt > FX_INTERVAL) updateRates(false);
+}
+function renderFxStatus(){
+  const st = $('#fxStatus'), btn = $('#fxFetch');
+  btn.disabled = fxBusy; btn.textContent = fxBusy ? '取得中…' : '最新のレート・価格を取得';
+  st.textContent = fxError; st.className = 'small' + (fxError ? ' neg' : '');
+}
+function renderFxBanner(){
+  const box = $('#fxBanner');
+  if(state.ui.fxAuto !== null || !(hasForeign() || needPrices())){ box.innerHTML = ''; return; }
+  box.innerHTML = `<div class="card" style="border-left:3px solid var(--accent)">
+    <h2>為替レート・価格を自動で取得しますか？</h2>
+    <p class="small" style="margin:0 0 10px">外貨建ての資産、または価格を自動取得にした暗号資産・金などがあります。オンにすると、開いたとき（6時間に1回まで）に無料の公開サービスから最新の値を取得します。送るのは「どの通貨・銘柄の値か」だけで、<b>資産のデータは送りません</b>。あとから「設定」で変更できます。</p>
+    <div class="row"><button class="btn primary" data-fx="on">自動で取得する</button><button class="btn" data-fx="off">手入力のままにする</button></div>
+  </div>`;
+}
+$('#fxBanner').addEventListener('click', e => {
+  const b = e.target.closest('[data-fx]'); if(!b) return;
+  state.ui.fxAuto = b.dataset.fx === 'on'; save(); renderFxBanner(); renderSettings();
+  if(state.ui.fxAuto) updateRates(true); else toast('手入力のままにしました。「設定」でいつでも取得できます');
+});
+$('#fxFetch').addEventListener('click', () => updateRates(true));
+$('#fxAuto').addEventListener('change', e => {
+  state.ui.fxAuto = e.target.checked; save(); renderFxBanner();
+  if(e.target.checked) updateRates(true);
+});
+
+
+/* ===== データを守る仕組み =====
+ * 1. ブラウザに「この保存データを消さないで」と依頼する（navigator.storage.persist）
+ * 2. バックアップのお知らせ（30日以上たったら表示）
+ * 3. iPhone の Safari で開いたときの「ホーム画面に追加」案内（Safari は7日間開かないサイトの保存データを消すため） */
+let persistAsked = false, persistState = 'unknown';
+async function requestPersist(){
+  if(persistAsked || !navigator.storage || !navigator.storage.persist) return;
+  persistAsked = true;
+  try{
+    persistState = (await navigator.storage.persisted()) || (await navigator.storage.persist()) ? 'granted' : 'denied';
+  }catch(e){ persistState = 'unknown'; }
+  if($('#persistStatus')) renderPersistStatus();
+}
+function renderPersistStatus(){
+  const el = $('#persistStatus'); if(!el) return;
+  el.textContent = persistState === 'granted' ? '保存データの保護: 有効（容量が足りなくなっても、ブラウザが自動で消さない設定です）'
+    : persistState === 'denied' ? '保存データの保護: ブラウザの判断で未許可（よく使うと許可されることがあります）。バックアップを忘れずに。'
+    : '';
+}
+/** 日付（YYYY-MM-DD）から今日までの日数。today() と同じ時計（new Date）で計算する */
+function daysSince(d){
+  if(!isDate(d)) return Infinity;
+  const toDay = s => { const [y, m, dd] = s.split('-').map(Number); return Date.UTC(y, m - 1, dd) / 86400000; };
+  return toDay(today()) - toDay(d);
+}
+function isIOSSafariTab(){
+  const ua = navigator.userAgent;
+  const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  return ios && location.protocol === 'https:' && !navigator.standalone && !matchMedia('(display-mode: standalone)').matches;
+}
+function renderNotices(){
+  const box = $('#noticeBanner'); const out = [];
+  if(isIOSSafariTab() && !state.ui.iosTipOff){
+    out.push(`<div class="card notice"><h2>iPhoneでは「ホーム画面に追加」して使ってください</h2>
+      <p class="small" style="margin:0 0 10px">Safariは、<b>7日間開かなかったサイトの保存データを自動で消します</b>。共有ボタン（□↑）→「ホーム画面に追加」で追加したアイコンから開くと、この自動削除の対象外になります。</p>
+      <div class="row"><button class="btn small" data-notice="ios-off">わかった（表示しない）</button></div></div>`);
+  }
+  if(dirHandle && dirPerm === 'prompt'){
+    out.push(`<div class="card notice"><h2>自動バックアップ: 保存の許可が必要です</h2>
+      <p class="small" style="margin:0 0 10px">ボタンを押して、確認画面で「<b>アクセスのたびに許可</b>」を選ぶと、次回からは確認なしで「${esc(dirHandle.name)}」に自動保存されます。</p>
+      <div class="row"><button class="btn primary small" data-notice="grant">許可して保存</button></div></div>`);
+  }
+  const days = daysSince(state.lastBackup);
+  if(state.holdings.length && days >= 30 && daysSince(state.ui.backupSnooze) >= 7){
+    out.push(`<div class="card notice"><h2>${state.lastBackup ? `最後のバックアップから${days}日たっています` : 'まだバックアップがありません'}</h2>
+      <p class="small" style="margin:0 0 10px">ブラウザのデータ削除や機種変更でデータが消えることがあります。バックアップファイルを保存しておくと、いつでも復元できます${crypt ? '（パスコード保護中なので暗号化して保存されます）' : ''}。</p>
+      <div class="row">${canShareFile() ? '<button class="btn primary small" data-notice="share">共有して保存</button>' : ''}<button class="btn ${canShareFile() ? '' : 'primary '}small" data-notice="backup">バックアップを保存</button><button class="btn small" data-notice="snooze">あとで（7日後に再表示）</button></div></div>`);
+  }
+  box.innerHTML = out.join('');
+}
+$('#noticeBanner').addEventListener('click', e => {
+  const b = e.target.closest('[data-notice]'); if(!b) return;
+  const a = b.dataset.notice;
+  if(a === 'ios-off'){ state.ui.iosTipOff = true; }
+  else if(a === 'snooze'){ state.ui.backupSnooze = today(); }
+  else if(a === 'backup'){ $('#exportJson').click(); return; }
+  else if(a === 'grant'){ grantAndBackup(); return; }
+  else if(a === 'share'){ shareBackup(); return; }
+  save(); renderNotices();
+});
+function markBackedUp(){ state.lastBackup = today(); save(); renderNotices(); renderSettings(); }
+
+/* ===== 自動バックアップ =====
+ * ① ブラウザ内の自動履歴: 起動のたびに、保存データ（保護中なら暗号化されたまま）を直近10回分残す。操作ミスからの復元用。
+ * ② PCの指定フォルダへの自動保存（File System Access API。Chrome/Edge）: 起動のたびに日付つきファイルへ書き込む。
+ *    保存先フォルダの情報は IndexedDB に保存。Chrome で「毎回許可」を選ぶと次回から確認なしで書き込める。
+ * ③ スマホの「共有して保存」（Web Share API）: ワンタップで iCloud Drive / Google ドライブなどへ。
+ * どれも、パスコード保護中は暗号化されたデータだけを書き出す。 */
+const AUTO_HIST_KEY = STORE_KEY + '.history', AUTO_HIST_MAX = 10, AUTO_FILE_PREFIX = '資産分散チャート_自動バックアップ_', AUTO_FILE_KEEP = 30;
+function storedRaw(){ try{ return localStorage.getItem(STORE_KEY); }catch(e){ return null; } }
+function readHistory(){ try{ const a = JSON.parse(localStorage.getItem(AUTO_HIST_KEY) || '[]'); return Array.isArray(a) ? a.filter(x => isObj(x) && typeof x.raw === 'string' && typeof x.at === 'number') : []; }catch(e){ return []; } }
+/** データの中身（表示設定などを除く）から作る照合用の値。同じ内容かどうかの判定だけに使う（元のデータには戻せない） */
+async function dataFingerprint(st){
+  const t = JSON.stringify([st.holdings, st.targets, st.snapshots, st.rates, st.prices]);
+  return b64(new Uint8Array(await crypto.subtle.digest('SHA-256', te.encode(t))).slice(0, 16));
+}
+/** 起動時に、いまの保存データを履歴に追加（直前と同じ内容なら追加しない） */
+async function pushHistory(){
+  const raw = storedRaw(); if(!raw) return;
+  let obj; try{ obj = JSON.parse(raw); }catch(e){ return; }
+  const enc = isEnvelope(obj);
+  if(!enc && !(isObj(obj) && Array.isArray(obj.holdings) && obj.holdings.length)) return;
+  let fp = raw;
+  try{ fp = enc ? (typeof obj.fp === 'string' ? obj.fp : raw) : await dataFingerprint(normalize(obj)); }catch(e){}
+  const hist = readHistory();
+  if(hist.length && (hist[0].fp || hist[0].raw) === fp) return;
+  hist.unshift({at:Date.now(), raw, fp, enc, n:enc ? null : obj.holdings.length});
+  try{ localStorage.setItem(AUTO_HIST_KEY, JSON.stringify(hist.slice(0, AUTO_HIST_MAX))); }catch(e){}
+}
+function fmtDateTime(ms){ const d = new Date(ms); return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; }
+
+/* --- IndexedDB（保存先フォルダの情報だけを置く） --- */
+function idb(){
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('shisan-bunsan-chart', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('kv');
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  });
+}
+async function idbGet(k){ const db = await idb(); return new Promise((res, rej) => { const q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function idbSet(k, v){ const db = await idb(); return new Promise((res, rej) => { const t = db.transaction('kv', 'readwrite'); v === undefined ? t.objectStore('kv').delete(k) : t.objectStore('kv').put(v, k); t.oncomplete = () => res(); t.onerror = () => rej(t.error); }); }
+
+/* --- ② PCフォルダへの自動保存 --- */
+const fsaSupported = () => 'showDirectoryPicker' in window;
+let dirHandle = null, dirPerm = 'none', autoFileStatus = '';
+async function loadDirHandle(){
+  if(!fsaSupported()) return;
+  try{ dirHandle = await idbGet('backupDir') || null; }catch(e){ dirHandle = null; }
+  if(dirHandle){ try{ dirPerm = await dirHandle.queryPermission({mode:'readwrite'}); }catch(e){ dirPerm = 'prompt'; } }
+}
+/** バックアップの中身: 保護中は暗号化済みの保存データそのもの、保護なしなら平文の状態 */
+function backupPayload(){ const raw = storedRaw(); return raw || JSON.stringify(state); }
+async function writeAutoFile(){
+  const raw = backupPayload();
+  let obj; try{ obj = JSON.parse(raw); }catch(e){ return false; }
+  if(!isEnvelope(obj) && !(isObj(obj) && Array.isArray(obj.holdings) && obj.holdings.length)) return false;
+  const name = AUTO_FILE_PREFIX + (isEnvelope(obj) ? '暗号化_' : '') + today() + '.json';
+  const fh = await dirHandle.getFileHandle(name, {create:true});
+  const w = await fh.createWritable(); await w.write(new Blob([raw], {type:'application/json'})); await w.close();
+  // 古い自動バックアップを整理（最新30個を残す）
+  const files = [];
+  for await (const [n, h] of dirHandle.entries()){ if(h.kind === 'file' && n.startsWith(AUTO_FILE_PREFIX)) files.push(n); }
+  files.sort().reverse().slice(AUTO_FILE_KEEP).forEach(n => dirHandle.removeEntry(n).catch(() => {}));
+  autoFileStatus = `${today().slice(5).replace('-', '/')} に「${dirHandle.name}」へ保存しました`;
+  if(!locked){ state.lastBackup = today(); save(); }
+  return true;
+}
+/** 起動時: 許可済みなら黙って保存。許可が必要なら、お知らせ欄にボタンを出す */
+async function autoFileBackupOnLaunch(){
+  if(!fsaSupported()) return;
+  await loadDirHandle();
+  if(!dirHandle) return;
+  if(dirPerm === 'granted'){
+    try{ await writeAutoFile(); }catch(e){ autoFileStatus = '自動保存に失敗しました（フォルダが移動・削除された可能性があります）'; }
+  }
+  if(!locked){ renderNotices(); renderSettings(); }
+}
+async function chooseBackupDir(){
+  try{
+    const h = await window.showDirectoryPicker({id:'shisan-backup', mode:'readwrite', startIn:'documents'});
+    dirHandle = h; await idbSet('backupDir', h); dirPerm = 'granted';
+    await writeAutoFile();
+    toast(`自動バックアップの保存先を「${h.name}」にしました`);
+  }catch(e){ if(e && e.name !== 'AbortError') toast('保存先を設定できませんでした'); }
+  renderSettings(); renderNotices();
+}
+/** 許可が必要なとき（ボタンのクリックの中で呼ぶ）。Chrome では「毎回許可」を選ぶと次回から自動になる */
+async function grantAndBackup(){
+  if(!dirHandle) return;
+  try{
+    dirPerm = await dirHandle.requestPermission({mode:'readwrite'});
+    if(dirPerm === 'granted'){ await writeAutoFile(); toast('自動バックアップを保存しました'); }
+  }catch(e){ toast('保存できませんでした'); }
+  renderSettings(); renderNotices();
+}
+
+/* --- ③ スマホの「共有して保存」 --- */
+function canShareFile(){
+  try{ return !!(navigator.canShare && navigator.canShare({files:[new File(['x'], 'a.txt', {type:'text/plain'})]})); }catch(e){ return false; }
+}
+async function shareBackup(){
+  const raw = crypt ? JSON.stringify(await encryptText(JSON.stringify(state), crypt)) : JSON.stringify(state);
+  // Android の共有は .json を受け付けないため .txt にする（中身は同じ。復元時は .txt も選べる）
+  const file = new File([raw], `資産分散チャート_バックアップ${crypt ? '_暗号化' : ''}_${today()}.txt`, {type:'text/plain'});
+  try{ await navigator.share({files:[file], title:'資産分散チャートのバックアップ'}); markBackedUp(); toast('バックアップを共有しました。保存先に保存されたか確認してください'); }
+  catch(e){ if(e && e.name !== 'AbortError') toast('共有できませんでした。「バックアップを保存」をお使いください'); }
+}
+
+/* --- 設定画面の表示 --- */
+function renderAutoBackup(){
+  const box = $('#autoBackupBox'); if(!box) return;
+  const hist = readHistory();
+  const fsa = fsaSupported();
+  box.innerHTML = `
+    <h3>① ブラウザ内の自動履歴（起動のたび・直近${AUTO_HIST_MAX}回分）</h3>
+    <p class="small muted" style="margin:0 0 6px">操作を間違えたときに、前の状態に戻せます。ブラウザのデータを消すと一緒に消えるため、②か③と組み合わせてください。</p>
+    ${hist.length ? `<ul class="pk-list">${hist.map((h, i) => `<li><span class="small">${esc(fmtDateTime(h.at))}${h.enc ? '（暗号化）' : `（${esc(h.n)}件）`}</span><button class="btn small" data-hist="${i}">この時点に戻す</button></li>`).join('')}</ul>` : '<p class="small">まだ履歴はありません（次に開いたときから記録されます）。</p>'}
+    <h3 style="margin-top:12px">② PCのフォルダに自動保存（Chrome・Edge）</h3>
+    ${fsa ? `<p class="small muted" style="margin:0 0 6px">開くたびに、選んだフォルダへバックアップファイルを保存します（最新30日分）。<b>OneDrive や Google ドライブの同期フォルダを選ぶと、PCが壊れてもクラウドに残ります。</b>確認画面で「<b>アクセスのたびに許可</b>」を選ぶと、次回からは確認なしで自動保存されます。${crypt ? '' : '<br>※パスコード保護がオフのため、暗号化されずに保存されます。'}</p>
+      <p class="small" style="margin:0 0 6px">${dirHandle ? `保存先: <b>${esc(dirHandle.name)}</b>（${dirPerm === 'granted' ? '自動保存できます' : '次回の保存時に許可が必要です'}）` : '保存先: 未設定'}${autoFileStatus ? `<br>${esc(autoFileStatus)}` : ''}</p>
+      <div class="row"><button class="btn" data-ab="choose">${dirHandle ? '保存先を変更' : '保存先フォルダを選ぶ'}</button>${dirHandle ? `<button class="btn" data-ab="now">今すぐ保存</button><button class="btn danger" data-ab="off">自動保存をやめる</button>` : ''}</div>`
+      : '<p class="small muted" style="margin:0">このブラウザでは使えません（PCのChrome・Edgeで使えます）。</p>'}
+    <h3 style="margin-top:12px">③ スマホで共有して保存</h3>
+    ${canShareFile() ? `<p class="small muted" style="margin:0 0 6px">iPhoneは「"ファイル"に保存」→ iCloud Drive、Androidは Google ドライブなどを選んでください。</p><button class="btn" data-ab="share">共有して保存</button>`
+      : '<p class="small muted" style="margin:0">このブラウザでは使えません（iPhone・Androidのブラウザで使えます）。</p>'}`;
+}
+$('#autoBackupBox').addEventListener('click', async e => {
+  const b = e.target.closest('[data-ab], [data-hist]'); if(!b) return;
+  if(b.dataset.ab === 'choose') return chooseBackupDir();
+  if(b.dataset.ab === 'now') return dirPerm === 'granted' ? writeAutoFile().then(() => { toast('保存しました'); renderSettings(); }).catch(() => toast('保存できませんでした')) : grantAndBackup();
+  if(b.dataset.ab === 'off'){ await idbSet('backupDir', undefined); dirHandle = null; dirPerm = 'none'; autoFileStatus = ''; renderSettings(); renderNotices(); toast('自動保存をやめました（保存済みのファイルは残ります）'); return; }
+  if(b.dataset.ab === 'share') return shareBackup();
+  if(b.dataset.hist !== undefined){
+    const h = readHistory()[+b.dataset.hist]; if(!h) return;
+    let data = null;
+    try{
+      const obj = JSON.parse(h.raw);
+      if(isEnvelope(obj)){
+        if(crypt){ try{ const key = crypt.key; data = JSON.parse(td.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:unb64(obj.iv)}, key, unb64(obj.data)))); }catch(_){ data = null; } }
+        if(!data){
+          const ok = await passPrompt({title:'履歴から戻す', ok:'開く', msg:'この時点のパスコード（またはリカバリーキー）を入力してください。',
+            fields:[{k:'p', label:'パスコード（またはリカバリーキー）', ac:'current-password'}],
+            validate: async v => { try{ data = JSON.parse((await openWithAny(obj, v.p)).text); return null; }catch(err){ return 'パスコード（リカバリーキー）が違います。'; } }});
+          if(!ok) return;
+        }
+      }else data = obj;
+    }catch(err){ toast('この履歴は読み込めませんでした'); return; }
+    if(!await confirmBox(`${fmtDateTime(h.at)} の状態（資産${(data.holdings || []).length}件）に戻しますか？\n\nいまの状態も履歴に残るので、あとから戻すこともできます。`, '履歴から戻す', '戻す')) return;
+    await flushSave(); await pushHistory();
+    state = normalize(data); selected = null; save(); renderAll(); renderHoldings(); toast('履歴の状態に戻しました');
+  }
+});
+
+
+/* ===== 設定 ===== */
+function renderSettings(){
+  $('#rateGrid').innerHTML = CUR.filter(c => c.k !== 'JPY').map(c => `<div class="field"><label>1${esc(c.n)}${c.k === 'OTHER' ? '' : `（${c.k}）`}</label>
+    <input type="text" inputmode="decimal" data-rate="${c.k}" value="${esc(fmtNum(parseNum(state.rates[c.k])))}"></div>`).join('');
+  $('#rateUpdated').textContent = rateLabel(false);
+  $('#fxAuto').checked = state.ui.fxAuto === true;
+  $('#lastBackupInfo').textContent = state.lastBackup ? `最後のバックアップ: ${jpDate(state.lastBackup)}` : 'まだバックアップを保存していません。';
+  renderPersistStatus();
+  renderAutoBackup();
+  renderFxStatus();
+  setSeg($('#themeSeg'), state.ui.theme);
+  renderProtect();
+}
+$('#rateGrid').addEventListener('change', e => {
+  const k = e.target.dataset.rate; if(!k) return;
+  state.rates[k] = parseNum(e.target.value); state.ratesUpdated = today(); state.ratesSource = 'manual';
+  e.target.value = fmtNum(state.rates[k]); save(); renderSettings(); renderCharts(); refreshCardSummaries();
+});
+$('#themeSeg').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; state.ui.theme = b.dataset.v; save(); applyTheme(); setSeg($('#themeSeg'), b.dataset.v); renderHistory(); });
+$('#hideBtn').addEventListener('click', () => { state.ui.hide = !state.ui.hide; save(); renderAll(); renderHoldings(openCardId()); });
+function openCardId(){ const d = $('#hlist details[open]'); return d ? d.dataset.id : null; }
+
+/* --- JSON --- */
+$('#exportJson').addEventListener('click', async () => {
+  if(crypt){
+    const env = await encryptText(JSON.stringify(state), crypt);
+    download(`資産分散チャート_バックアップ_暗号化_${today()}.json`, JSON.stringify(env), 'application/json');
+    markBackedUp();
+    toast('暗号化したバックアップを保存しました（復元にはいまのパスコードが必要です）');
+  }else{
+    download(`資産分散チャート_バックアップ_${today()}.json`, JSON.stringify(state, null, 2), 'application/json');
+    markBackedUp();
+    toast('バックアップを保存しました');
+  }
+});
+$('#exportJsonPlain').addEventListener('click', async () => {
+  if(!await confirmBox('暗号化されていないバックアップは、ファイルを開けば誰でも中身（資産の一覧）を読めます。保存しますか？', '暗号化せずに保存', '保存する')) return;
+  download(`資産分散チャート_バックアップ_${today()}.json`, JSON.stringify(state, null, 2), 'application/json');
+  markBackedUp();
+  toast('暗号化せずにバックアップを保存しました。取り扱いに注意してください');
+});
+$('#importJsonBtn').addEventListener('click', () => $('#importJson').click());
+$('#importJson').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if(!f) return;
+  if(f.size > 10 * 1024 * 1024){ toast('ファイルが大きすぎます（10MBまで）'); return; }
+  try{
+    let data = JSON.parse(await f.text());
+    const wasEncrypted = isEnvelope(data);
+    if(wasEncrypted){
+      if(!cryptoReady()){ toast('このブラウザでは暗号化されたバックアップを開けません'); return; }
+      const env = data; let dec = null;
+      const ok = await passPrompt({
+        title:'暗号化されたバックアップ', ok:'開く',
+        msg:'このバックアップを保存したときのパスコード、またはリカバリーキーを入力してください。',
+        fields:[{k:'p', label:'パスコード（またはリカバリーキー）', ac:'current-password'}],
+        validate: async v => { try{ dec = JSON.parse((await openWithAny(env, v.p)).text); return null; }catch(err){ return 'パスコード（リカバリーキー）が違います。'; } }
+      });
+      if(!ok) return;
+      data = dec;
+    }
+    if(!isObj(data) || !Array.isArray(data.holdings)) throw new Error('形式が違います');
+    if(!await confirmBox(`バックアップ（資産${data.holdings.length}件・記録${(data.snapshots || []).length}件）で、いまのデータを置き換えますか？`, 'バックアップから復元', '復元する')) return;
+    state = normalize(data); save(); selected = null; renderAll(); renderHoldings();
+    toast(!crypt && wasEncrypted ? '復元しました。いまはパスコード保護がオフのため、ブラウザ内には暗号化せずに保存されます' : '復元しました');
+  }catch(err){ toast('読み込めませんでした。このツールで保存したJSONファイルを選んでください。'); }
+});
+
+/* --- CSV --- */
+const CSV_HEAD = ['名称', '入力方法', '評価額', '数量', '単価', '通貨', '資産クラス', '地域', '金融機関', '口座区分', '取得額(円)', '内訳', '銘柄コード', '価格の自動取得'];
+function csvCell(v){ const s = String(v ?? ''); return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+// Excel で開いたときに「=」「+」「-」「@」で始まる文字が数式として実行されないよう、先頭に ' を付ける
+function csvText(v){ const s = String(v ?? ''); return /^[=+\-@\t\r]/.test(s) ? "'" + s : s; }
+function csvUntext(s){ return /^'[=+\-@\t\r]/.test(s) ? s.slice(1) : s; }
+$('#exportCsv').addEventListener('click', async () => {
+  if(crypt && !await confirmBox('CSVはExcelで開くための形式なので、暗号化されません。ファイルを開けば誰でも中身（資産の一覧）を読めます。書き出しますか？', 'CSVで書き出す', '書き出す')) return;
+  const lines = [CSV_HEAD.join(',')].concat(state.holdings.map(h => [
+    csvText(h.name), h.mode === 'qty' ? '数量×単価' : '評価額', h.mode === 'amount' ? parseNum(h.amount) : '', h.mode === 'qty' ? parseNum(h.qty) : '',
+    h.mode === 'qty' ? parseNum(h.price) : '', nameOf(CUR, h.currency), nameOf(CLS, h.cls), nameOf(REG, h.reg), csvText(h.account), nameOf(TAX, h.tax),
+    h.cost === null || h.cost === undefined || h.cost === '' ? '' : parseNum(h.cost),
+    validSplit(h) ? h.split.map(r => `${nameOf(CLS, r.cls)}/${nameOf(REG, r.reg)}/${r.pct}`).join(';') : '',
+    h.code, h.auto
+  ].map(csvCell).join(',')));
+  download(`資産分散チャート_${today()}.csv`, '﻿' + lines.join('\r\n'), 'text/csv');
+});
+function parseCSV(text){
+  const rows = []; let row = [], cell = '', q = false;
+  for(let i = 0; i < text.length; i++){
+    const c = text[i];
+    if(q){
+      if(c === '"'){ if(text[i + 1] === '"'){ cell += '"'; i++; } else q = false; }
+      else cell += c;
+    }else if(c === '"') q = true;
+    else if(c === ','){ row.push(cell); cell = ''; }
+    else if(c === '\n' || c === '\r'){ if(c === '\r' && text[i + 1] === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += c;
+  }
+  if(cell !== '' || row.length){ row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(x => x.trim() !== ''));
+}
+function keyOf(list, name, fallback){
+  const s = String(name || '').trim(); if(!s) return fallback;
+  const f = list.find(x => x.n === s || x.k === s || x.k.toLowerCase() === s.toLowerCase()) || list.find(x => x.n.includes(s) || s.includes(x.n));
+  return f ? f.k : fallback;
+}
+$('#importCsvBtn').addEventListener('click', () => $('#importCsv').click());
+$('#importCsv').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if(!f) return;
+  if(f.size > 10 * 1024 * 1024){ toast('ファイルが大きすぎます（10MBまで）'); return; }
+  try{
+    const buf = await f.arrayBuffer();
+    let text = new TextDecoder('utf-8').decode(buf);
+    if(text.includes('�')){ try{ text = new TextDecoder('shift_jis').decode(buf); }catch(_){} }
+    text = text.replace(/^﻿/, '');
+    const rows = parseCSV(text);
+    if(rows.length < 2) throw new Error('empty');
+    const head = rows[0].map(s => s.trim());
+    const idx = n => head.indexOf(n);
+    if(idx('名称') < 0) throw new Error('no header');
+    const get = (r, n) => { const i = idx(n); return i < 0 ? '' : (r[i] || '').trim(); };
+    const hs = rows.slice(1).map(r => {
+      const mode = get(r, '入力方法').includes('数量') ? 'qty' : 'amount';
+      const split = get(r, '内訳') ? get(r, '内訳').split(';').map(x => { const [c, g, p] = x.split('/'); return {cls:keyOf(CLS, c, 'other'), reg:keyOf(REG, g, 'other'), pct:parseNum(p)}; }).filter(x => x.pct > 0) : null;
+      const cost = get(r, '取得額(円)');
+      return fixHolding({name:csvUntext(get(r, '名称')), mode, amount:parseNum(get(r, '評価額')), qty:parseNum(get(r, '数量')), price:parseNum(get(r, '単価')),
+        currency:keyOf(CUR, get(r, '通貨'), 'JPY'), cls:keyOf(CLS, get(r, '資産クラス'), 'other'), reg:keyOf(REG, get(r, '地域'), 'other'),
+        account:csvUntext(get(r, '金融機関')), tax:keyOf(TAX, get(r, '口座区分'), 'none'), cost: cost === '' ? null : parseNum(cost), split: split && split.length > 1 ? split : null,
+        code:get(r, '銘柄コード'), auto:get(r, '価格の自動取得')});
+    });
+    const replace = state.holdings.length ? await confirmBox(`${hs.length}件の資産を読み込みます。いまの資産を置き換えますか？（「キャンセル」を選ぶと、いまの資産に追加します）`, 'CSVの読み込み', '置き換える') : true;
+    state.holdings = replace ? hs : state.holdings.concat(hs);
+    save(); renderAll(); renderHoldings(); toast(`${hs.length}件を読み込みました`);
+  }catch(err){ toast('CSVを読み込めませんでした。1行目に「名称」などの見出しが必要です。'); }
+});
+
+/* --- サンプル・削除 --- */
+function sampleData(){
+  const s = blankState();
+  s.ui = {...state.ui};
+  s.rates = {...DEFAULT_RATES};
+  const P = i => PRESETS[i].rows.map(([cls, reg, pct]) => ({cls, reg, pct}));
+  s.holdings = [
+    {name:'普通預金（生活防衛資金）', amount:3000000, cls:'cash', reg:'jp', account:'A銀行', tax:'none'},
+    {name:'米ドル預金', amount:10000, currency:'USD', cls:'cash', reg:'us', account:'A銀行', tax:'none'},
+    {name:'全世界株式インデックス（例）', amount:4200000, split:P(0), account:'B証券', tax:'tsumitate', cost:3000000},
+    {name:'米国株式インデックス（例）', amount:1800000, cls:'stock', reg:'us', account:'B証券', tax:'growth', cost:1400000},
+    {name:'国内高配当株（例）', mode:'qty', qty:300, price:2800, code:'8058', cls:'stock', reg:'jp', account:'B証券', tax:'tokutei', cost:600000},
+    {name:'米国ETF（例）', mode:'qty', qty:40, price:300, code:'VTI', currency:'USD', cls:'stock', reg:'us', account:'C証券', tax:'growth', cost:1500000},
+    {name:'iDeCo 先進国株式（例）', amount:1200000, split:P(1), account:'B証券', tax:'ideco', cost:900000},
+    {name:'個人向け国債 変動10年', amount:1000000, cls:'bond', reg:'jp', account:'B証券', tax:'tokutei', cost:1000000},
+    {name:'ビットコイン（例）', mode:'qty', qty:0.05, price:15000000, auto:'BTC', cls:'crypto', reg:'other', account:'D取引所', tax:'none', cost:500000},
+    {name:'純金積立（例）', mode:'qty', qty:30, price:18000, auto:'XAU', cls:'gold', reg:'other', account:'E商社', tax:'none', cost:400000},
+    {name:'投資用ワンルーム（評価額）', amount:8000000, cls:'realestate', reg:'jp', account:'', tax:'none'},
+    {name:'終身保険（解約返戻金）', amount:1500000, cls:'insurance', reg:'jp', account:'F生命', tax:'none'}
+  ].map(fixHolding);
+  s.targets = {cls:{stock:70, bond:10, cash:20}, reg:{jp:30, us:45, dev:15, em:10}};
+  // サンプルの推移（架空の値）
+  const prevState = state; state = s;
+  const base = makeSnapshot(); state = prevState;
+  const d = new Date();
+  s.snapshots = [];
+  for(let i = 5; i >= 0; i--){
+    const dt = new Date(d.getFullYear(), d.getMonth() - i, 1);
+    const f = 1 - i * 0.025 + (i % 2 ? 0.01 : -0.005);
+    const snap = {date:`${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-01`, cls:{}, reg:{}};
+    Object.entries(base.cls).forEach(([k, v]) => snap.cls[k] = Math.round(['stock', 'crypto', 'gold'].includes(k) ? v * f : v));
+    const ratio = Object.values(snap.cls).reduce((a, b) => a + b, 0) / base.total;
+    Object.entries(base.reg).forEach(([k, v]) => snap.reg[k] = Math.round(v * ratio));
+    snap.total = Object.values(snap.cls).reduce((a, b) => a + b, 0);
+    s.snapshots.push(snap);
+  }
+  return s;
+}
+async function handleAct(a){
+  if(a === 'goto-input'){ switchTab('input'); $('#addBtn').focus(); }
+  else if(a === 'sample'){
+    if(state.holdings.length && !await confirmBox('いまのデータをサンプルデータで置き換えますか？（いまのデータは消えます）', 'サンプルデータ', '置き換える')) return;
+    state = sampleData(); save(); selected = null; renderAll(); renderHoldings(); toast('サンプルデータを入れました（金額はすべて架空です）');
+  }
+}
+$('#sampleBtn').addEventListener('click', () => handleAct('sample'));
+$('#resetBtn').addEventListener('click', async () => {
+  if(!await confirmBox('資産・目標・推移の記録をすべて削除します。元に戻せません。先にバックアップを保存することをおすすめします。', 'すべてのデータを削除', '削除する')) return;
+  const ui = state.ui; state = blankState(); state.ui.theme = ui.theme; save(); selected = null; renderAll(); renderHoldings(); toast('すべてのデータを削除しました');
+});
+
+/* ===== パスコード保護 ===== */
+/** パスコード入力ダイアログ。validate が文字列を返したらエラーとして表示し、閉じない */
+function passPrompt({title, msg, fields, ack, ok = 'OK', validate}){
+  return new Promise(res => {
+    const d = $('#passDlg'), form = $('#passForm'), body = $('#passBody');
+    $('#passTitle').textContent = title;
+    body.innerHTML = (msg ? `<p class="small" style="margin-top:0">${esc(msg)}</p>` : '') +
+      fields.map(f => `<div class="field" style="margin-bottom:10px"><label for="pf-${f.k}">${esc(f.label)}</label>
+        <input type="${f.type === 'text' ? 'text' : 'password'}" ${f.type === 'text' ? '' : 'data-pw'} id="pf-${f.k}" data-k="${f.k}" value="${esc(f.value || '')}"
+          autocomplete="${f.ac || 'off'}" ${f.type === 'text' ? 'autocapitalize="characters" spellcheck="false"' : ''}></div>`).join('') +
+      (ack ? `<label class="ack"><input type="checkbox" id="pfAck"><span>${esc(ack)}</span></label>` : '') +
+      (fields.some(f => f.type !== 'text') ? `<label class="ack muted"><input type="checkbox" id="pfShow"><span>入力中のパスコードを表示する</span></label>` : '') +
+      `<p class="lock-err" id="pfErr" role="alert"></p>`;
+    $('#passOk').textContent = ok;
+    const err = m => { $('#pfErr').textContent = m || ''; };
+    const finish = v => { d.close(); form.onsubmit = null; $('#passCancel').onclick = null; body.innerHTML = ''; res(v); };
+    const show = $('#pfShow');
+    if(show) show.onchange = e => $$('input[data-pw]', body).forEach(i => i.type = e.target.checked ? 'text' : 'password');
+    form.onsubmit = async e => {
+      e.preventDefault();
+      const v = {}; $$('input[data-k]', body).forEach(i => v[i.dataset.k] = i.value);
+      if(fields.some(f => !v[f.k])){ err('すべての欄を入力してください。'); return; }
+      if(ack && !$('#pfAck').checked){ err('確認のチェックを入れてください。'); return; }
+      const okBtn = $('#passOk'); okBtn.disabled = true; okBtn.textContent = '確認中…'; err('');
+      let m = null;
+      try{ m = validate ? await validate(v) : null; }catch(x){ m = '処理に失敗しました。もう一度お試しください。'; }
+      okBtn.disabled = false; okBtn.textContent = ok;
+      if(m){ err(m); return; }
+      finish(true);
+    };
+    $('#passCancel').onclick = () => finish(null);
+    d.oncancel = e => { e.preventDefault(); finish(null); };
+    d.showModal();
+    const first = $('input[data-k]', body); if(first) first.focus();
+  });
+}
+/** リカバリーキーを表示する。保管したことにチェックするまで閉じられない */
+function showRecovery(code){
+  return new Promise(res => {
+    const d = $('#recDlg');
+    $('#recCode').textContent = code;
+    $('#recAck').checked = false; $('#recDone').disabled = true;
+    $('#recAck').onchange = e => { $('#recDone').disabled = !e.target.checked; };
+    $('#recCopy').onclick = async () => {
+      try{ await navigator.clipboard.writeText(code); toast('コピーしました。貼り付けて保管したら、クリップボードは別の文字で上書きしておくと安心です'); }
+      catch(e){ const r = document.createRange(); r.selectNodeContents($('#recCode')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('選択しました。長押し（右クリック）でコピーしてください'); }
+    };
+    $('#recSave').onclick = () => {
+      download(`資産分散チャート_リカバリーキー_${today()}.txt`,
+        `資産分散チャート リカバリーキー\r\n発行日: ${jpDate(today())}\r\n\r\n${code}\r\n\r\n` +
+        `・パスコードを忘れたとき、ロック画面の「リカバリーキーで開く」に入力します。\r\n` +
+        `・このキーを知っている人は誰でもデータを開けます。このファイルはPC・スマホに置いたままにせず、印刷するかパスワード管理アプリに移してから削除してください。\r\n`, 'text/plain');
+    };
+    const done = () => { d.close(); $('#recCode').textContent = ''; $('#recCopy').onclick = $('#recSave').onclick = $('#recAck').onchange = null; $('#recDone').onclick = null; res(); };
+    $('#recDone').onclick = done;
+    d.oncancel = e => e.preventDefault(); // 保管の確認前に Esc で閉じさせない
+    d.showModal();
+  });
+}
+function showLock(){
+  $('#lockScreen').hidden = false; $('header.top').hidden = true; $('main.wrap').hidden = true;
+  $('#unlockErr').textContent = ''; $('#unlockPass').value = '';
+  $('#recoverBtn').hidden = !hasRecovery(lockedEnvelope);
+  const pkOk = passkeyEnv().ok && pkList(lockedEnvelope).length > 0;
+  $('#passkeyBtn').hidden = !pkOk; $('#passkeyBtn').disabled = false;
+  $('#unlockBtn').className = pkOk ? 'btn' : 'btn primary';
+  setTimeout(() => $('#unlockPass').focus(), 50);
+}
+function hideLock(){ $('#lockScreen').hidden = true; $('header.top').hidden = false; $('main.wrap').hidden = false; }
+let locking = false;
+async function lockNow(){
+  if(!crypt || locked || locking) return;
+  locking = true;
+  try{
+    await flushSave();
+    try{ lockedEnvelope = JSON.parse(localStorage.getItem(STORE_KEY)); }catch(e){ lockedEnvelope = null; }
+    if(!isEnvelope(lockedEnvelope)){ toast('ロックできませんでした（保存に失敗しています）'); return; }
+    $$('dialog[open]').forEach(d => d.close());
+    hideTip();
+    // 画面とメモリから資産データを消す
+    const theme = state.ui.theme;
+    crypt = null; locked = true; selected = null;
+    state = blankState(); state.ui.theme = theme;
+    $('#rbAmount').value = '';
+    renderAll(); renderHoldings();
+    showLock();
+  }finally{ locking = false; }
+}
+/** ロック解除の後始末（共通） */
+function finishUnlock(newState, c){
+  state = newState; crypt = c; locked = false; lockedEnvelope = null; $('#unlockPass').value = '';
+  hideLock(); touch();
+  renderAll(); renderHoldings(); switchTab(state.ui.tab);
+  autoUpdateRates();
+}
+$('#unlockForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const pass = $('#unlockPass').value;
+  if(!pass){ $('#unlockErr').textContent = 'パスコードを入力してください。'; return; }
+  const btn = $('#unlockBtn'); btn.disabled = true; btn.textContent = '確認中…';
+  let dec = null;
+  try{ dec = await openEnvelope(lockedEnvelope, pass, 'pass'); }
+  catch(err){ $('#unlockErr').textContent = 'パスコードが違います。'; $('#unlockPass').select(); }
+  btn.disabled = false; btn.textContent = '開く';
+  if(!dec) return;
+  let s;
+  try{ s = normalize(JSON.parse(dec.text)); }
+  catch(err){ $('#unlockErr').textContent = 'データが壊れているため開けません。バックアップから復元してください。'; return; }
+  finishUnlock(s, dec.crypt);
+  if(dec.migrated){ await flushSave(); toast('保存形式を更新しました。「設定」でリカバリーキーを発行しておくと安心です'); }
+});
+$('#recoverBtn').addEventListener('click', async () => {
+  let s = null, c = null;
+  const env = lockedEnvelope;
+  const ok = await passPrompt({
+    title:'リカバリーキーで開く', ok:'開いてパスコードを設定',
+    msg:'保管しておいたリカバリーキーと、新しく使うパスコードを入力してください。',
+    fields:[{k:'rec', label:'リカバリーキー（ハイフンは省略できます）', type:'text'},
+            {k:'p1', label:'新しいパスコード', ac:'new-password'}, {k:'p2', label:'新しいパスコード（もう一度）', ac:'new-password'}],
+    validate: async v => {
+      const m = checkNewPass(v.p1, v.p2); if(m) return m;
+      let dec;
+      try{ dec = await openEnvelope(env, v.rec, 'rec', true); }catch(err){ return 'リカバリーキーが違います。'; }
+      try{
+        s = normalize(JSON.parse(dec.text));
+        c = {key:dec.crypt.key, wraps:{...dec.crypt.wraps, pass:await wrapRaw(dec.raw, v.p1)}};
+      }catch(err){ return 'データが壊れているため開けません。'; }
+      finally{ dec.raw.fill(0); }
+      return null;
+    }
+  });
+  if(!ok) return;
+  finishUnlock(s, c);
+  await flushSave();
+  toast('新しいパスコードを設定しました。リカバリーキーは引き続き使えます');
+});
+$('#forgotBtn').addEventListener('click', async () => {
+  if(!await confirmBox('保存されているデータを削除して、最初から使い始めますか？\n\nリカバリーキーがあれば、削除せずに「リカバリーキーで開く」から開けます。バックアップ（JSON）を持っていれば、削除した後でも「設定」の「バックアップから復元」で戻せます。', 'データを削除して最初から始める', '削除して始める')) return;
+  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+  const theme = storedTheme();
+  locked = false; lockedEnvelope = null; crypt = null;
+  state = blankState(); state.ui.theme = theme;
+  hideLock(); renderAll(); renderHoldings(); switchTab('chart');
+  toast('データを削除しました');
+});
+$('#lockBtn').addEventListener('click', lockNow);
+
+/* 操作がない状態が続いたら自動でロック */
+let lastActive = Date.now();
+function touch(){ lastActive = Date.now(); }
+['pointerdown', 'keydown', 'input', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, touch, {passive:true, capture:true}));
+function checkAutoLock(){
+  if(crypt && !locked && state.ui.autoLock > 0 && Date.now() - lastActive > state.ui.autoLock * 60000) lockNow();
+}
+setInterval(checkAutoLock, 15000);
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible'){ checkAutoLock(); autoUpdateRates(); }
+  else if(crypt && state.ui.lockOnHide) lockNow();   // 別のアプリ・タブに切り替えたらすぐロック
+  else flushSave();
+});
+addEventListener('pagehide', () => flushSave());
+
+function renderProtect(){
+  const box = $('#protectBox');
+  $('#lockBtn').hidden = !crypt;
+  $('#exportJsonPlain').hidden = !crypt;
+  $('#exportJson').textContent = crypt ? 'バックアップを保存（暗号化）' : 'バックアップを保存（JSON）';
+  if(!cryptoReady()){
+    box.innerHTML = `<div class="alert">このブラウザでは暗号化機能が使えないため、パスコード保護は利用できません。最新のChrome・Edge・Safari・Firefoxで開いてください。</div>`;
+    return;
+  }
+  if(!crypt){
+    box.innerHTML = `<p class="small" style="margin:0 0 10px">現在: <b>オフ</b>（データは暗号化されずに保存されています）</p>
+      <button class="btn primary" data-pa="enable">パスコードを設定する</button>
+      <p class="small muted" style="margin:10px 0 0">パスキー（Windows Hello・スマホの画面ロックなど）で開けるようにするには、先にパスコードを設定してください。パスコードは、パスキーが使えないときの予備になります。</p>`;
+    return;
+  }
+  const rec = !!crypt.wraps.rec;
+  box.innerHTML = `<p class="small" style="margin:0 0 4px">現在: <b class="pos">オン</b>（AES-256-GCMで暗号化して保存中）</p>
+    <p class="small" style="margin:0 0 10px">リカバリーキー: ${rec ? '<b class="pos">発行済み</b>' : '<b class="neg">未発行</b>（パスコードを忘れると復元できません）'}</p>
+    <div class="field" style="max-width:280px"><label for="autoLockSel">自動ロック（操作がない状態が続いたとき）</label>
+      <select id="autoLockSel">${AUTO_LOCK_CHOICES.map(m => `<option value="${m}" ${state.ui.autoLock === m ? 'selected' : ''}>${m ? m + '分後' : '自動ロックしない'}</option>`).join('')}</select></div>
+    <label class="ack"><input type="checkbox" id="lockOnHide" ${state.ui.lockOnHide ? 'checked' : ''}><span>別のアプリやタブに切り替えたら、すぐにロックする<br><span class="muted">スマホを置いたままにする・人に画面を見られる心配があるときにおすすめです（戻るたびにパスコードが必要になります）</span></span></label>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" data-pa="lock">今すぐロック</button>
+      <button class="btn" data-pa="change">パスコードを変更</button>
+      <button class="btn" data-pa="reissue">${rec ? 'リカバリーキーを再発行' : 'リカバリーキーを発行'}</button>
+      <button class="btn danger" data-pa="disable">保護を解除</button>
+    </div>
+    ${renderPasskeyPart()}`;
+}
+$('#protectBox').addEventListener('change', e => {
+  if(e.target.id === 'autoLockSel'){ state.ui.autoLock = pickOne(AUTO_LOCK_CHOICES, +e.target.value, 15); save(); touch(); }
+  if(e.target.id === 'lockOnHide'){ state.ui.lockOnHide = e.target.checked; save(); }
+});
+$('#protectBox').addEventListener('click', async e => {
+  const b = e.target.closest('[data-pa]'); if(!b) return;
+  const a = b.dataset.pa;
+  if(a === 'lock'){ lockNow(); return; }
+  if(a === 'enable'){
+    try{ localStorage.setItem(STORE_KEY + '.test', '1'); localStorage.removeItem(STORE_KEY + '.test'); }
+    catch(err){ toast('このブラウザではデータを保存できないため、保護を設定できません'); return; }
+    let recCode = null;
+    const ok = await passPrompt({
+      title:'パスコードを設定', ok:'設定する',
+      msg:'8文字以上で、英字と数字を混ぜるなど推測されにくいものにしてください。パスコードはどこにも保存されません。設定すると、パスコードを忘れたときに使う「リカバリーキー」が表示されます。',
+      fields:[{k:'p1', label:'新しいパスコード', ac:'new-password'}, {k:'p2', label:'もう一度入力', ac:'new-password'}],
+      validate: async v => {
+        const m = checkNewPass(v.p1, v.p2); if(m) return m;
+        const r = await createCrypt(v.p1); crypt = r.crypt; recCode = r.rec; return null;
+      }
+    });
+    if(!ok) return;
+    await flushSave();
+    // 以前の読み込み失敗時に退避した平文データが残っていれば消す
+    try{ Object.keys(localStorage).filter(k => k.startsWith(STORE_KEY + '.broken-')).forEach(k => localStorage.removeItem(k)); }catch(err){}
+    touch(); renderProtect();
+    await showRecovery(recCode); recCode = null;
+    toast('パスコード保護をオンにしました');
+  }else if(a === 'change'){
+    const ok = await passPrompt({
+      title:'パスコードを変更', ok:'変更する',
+      fields:[{k:'cur', label:'いまのパスコード', ac:'current-password'}, {k:'p1', label:'新しいパスコード', ac:'new-password'}, {k:'p2', label:'新しいパスコード（もう一度）', ac:'new-password'}],
+      validate: async v => {
+        const m = checkNewPass(v.p1, v.p2); if(m) return m;
+        try{ await rewrapPass(v.cur, v.p1); }catch(err){ return 'いまのパスコードが違います。'; }
+        return null;
+      }
+    });
+    if(!ok) return;
+    await flushSave(); renderProtect();
+    toast('パスコードを変更しました。以前に保存した暗号化バックアップは、古いパスコードかリカバリーキーで開きます');
+  }else if(a === 'reissue'){
+    let recCode = null;
+    const ok = await passPrompt({
+      title:'リカバリーキーを' + (crypt.wraps.rec ? '再発行' : '発行'), ok:'発行する',
+      msg: crypt.wraps.rec ? '新しいリカバリーキーを発行すると、いまのリカバリーキーではこのブラウザのデータを開けなくなります（以前に保存した暗号化バックアップは、そのときのキーで開けます）。' : 'パスコードを忘れたときに使うリカバリーキーを発行します。',
+      fields:[{k:'cur', label:'いまのパスコード', ac:'current-password'}],
+      validate: async v => { try{ recCode = await reissueRecovery(v.cur); return null; }catch(err){ return 'パスコードが違います。'; } }
+    });
+    if(!ok) return;
+    await flushSave(); renderProtect();
+    await showRecovery(recCode); recCode = null;
+    toast('リカバリーキーを発行しました');
+  }else if(a === 'disable'){
+    const ok = await passPrompt({
+      title:'パスコード保護を解除', ok:'解除する',
+      msg:'解除すると、データは暗号化されずにブラウザ内に保存されます。',
+      fields:[{k:'cur', label:'いまのパスコード', ac:'current-password'}],
+      validate: async v => (await verifyCurrentPass(v.cur)) ? null : 'パスコードが違います。'
+    });
+    if(!ok) return;
+    crypt = null; await flushSave(); renderProtect(); toast('パスコード保護を解除しました');
+  }
+});
+
+/* ===== パスキー（WebAuthn + PRF拡張） =====
+ * サーバーがないため「ログイン」ではなく、パスキーから暗号化の鍵を取り出す（PRF拡張）方式にする。
+ *  パスキーの PRF 出力（32バイト）→ HKDF-SHA256 → 鍵 → データ鍵を包む（パスコード・リカバリーキーと同じデータ鍵）
+ * パスキーはページのドメインに結び付くため、HTTPS で公開したページ（または localhost）でのみ使える。 */
+const PK_INFO = te.encode('shisan-bunsan-chart/passkey/v1');
+function b64url(u8){ return b64(u8).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function unb64url(s){ s = String(s).replace(/-/g, '+').replace(/_/g, '/'); while(s.length % 4) s += '='; return unb64(s); }
+/** パスキーが使える環境か。{ok, reason} */
+function passkeyEnv(){
+  if(location.protocol === 'file:') return {ok:false, reason:'file'};
+  if(!window.PublicKeyCredential || !navigator.credentials || !window.isSecureContext) return {ok:false, reason:'nosupport'};
+  return {ok:true, reason:''};
+}
+function pkList(env){ return env && env.v === 2 && Array.isArray(env.wraps.pk) ? env.wraps.pk : []; }
+async function kekFromPrf(prfOut, salt){
+  const base = await crypto.subtle.importKey('raw', prfOut, 'HKDF', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name:'HKDF', hash:'SHA-256', salt, info:PK_INFO}, base, {name:'AES-GCM', length:256}, false, ['encrypt', 'decrypt']);
+}
+function prfFirst(cred){
+  const ext = cred && cred.getClientExtensionResults ? cred.getClientExtensionResults() : {};
+  const f = ext.prf && ext.prf.results && ext.prf.results.first;
+  return f ? new Uint8Array(f) : null;
+}
+/** 登録済みパスキーのどれかで認証し、そのパスキーの PRF 出力を得る */
+async function passkeyAssert(entries){
+  const evalBy = {};
+  entries.forEach(p => { evalBy[p.cred] = {first:unb64(p.prfSalt)}; });
+  const a = await navigator.credentials.get({publicKey:{
+    challenge:rand(32), userVerification:'required', timeout:120000,
+    allowCredentials:entries.map(p => ({type:'public-key', id:unb64url(p.cred)})),
+    extensions:{prf:{evalByCredential:evalBy}}
+  }});
+  const id = b64url(new Uint8Array(a.rawId));
+  const entry = entries.find(p => p.cred === id);
+  const prf = prfFirst(a);
+  if(!entry) throw new Error('unknown credential');
+  if(!prf) throw new Error('noprf');
+  return {entry, prf};
+}
+/** パスキーでデータ鍵を取り出す（呼び出し側で raw.fill(0) する） */
+async function rawFromPasskey(entries){
+  const {entry, prf} = await passkeyAssert(entries);
+  try{
+    const kek = await kekFromPrf(prf, unb64(entry.salt));
+    return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM', iv:unb64(entry.iv)}, kek, unb64(entry.data)));
+  }finally{ prf.fill(0); }
+}
+function passkeyErrorText(e){
+  if(e && e.name === 'NotAllowedError') return 'パスキーの操作がキャンセルされたか、時間切れになりました。';
+  if(e && e.name === 'InvalidStateError') return 'この端末のパスキーはすでに登録されています。';
+  if(e && e.message === 'noprf') return 'このパスキーはデータの暗号化（PRF拡張）に対応していないため使えません。Windows Hello（2026年2月以降の更新）、Androidのパスワードマネージャー、iPhoneのiCloudキーチェーンなど、PRF対応のパスキーを使ってください。';
+  if(e && e.message === 'locked') return '登録中にロックされたため、パスキーを登録できませんでした。もう一度お試しください。';
+  if(e && e.name === 'SecurityError') return 'このページではパスキーを使えません（HTTPSで公開したページで開いてください）。';
+  return 'パスキーで確認できませんでした。';
+}
+/** パスキーを登録して、データ鍵をパスキーでも包む */
+async function registerPasskey(raw, label){
+  const prfSalt = rand(32);
+  const existing = crypt.wraps.pk || [];
+  const cred = await navigator.credentials.create({publicKey:{
+    rp:{name:'資産分散チャート'},
+    user:{id:rand(16), name:'資産分散チャート', displayName:'資産分散チャート（' + label + '）'},
+    challenge:rand(32), timeout:120000,
+    pubKeyCredParams:[{type:'public-key', alg:-7}, {type:'public-key', alg:-257}],
+    authenticatorSelection:{residentKey:'preferred', userVerification:'required'},
+    excludeCredentials:existing.map(p => ({type:'public-key', id:unb64url(p.cred)})),
+    extensions:{prf:{eval:{first:prfSalt}}}
+  }});
+  if(!crypt) throw new Error('locked');
+  const ext = cred.getClientExtensionResults();
+  if(!ext.prf || ext.prf.enabled === false) throw new Error('noprf');
+  const credId = b64url(new Uint8Array(cred.rawId));
+  let prf = prfFirst(cred);
+  if(!prf){
+    // Windows Hello などは「作成時」には PRF 値を返さないので、続けてもう一度認証して取得する
+    toast('確認のため、もう一度パスキーで認証してください');
+    const r = await passkeyAssert([{cred:credId, prfSalt:b64(prfSalt)}]);
+    prf = r.prf;
+  }
+  try{
+    if(!crypt) throw new Error('locked');
+    const salt = rand(16), iv = rand(12);
+    const kek = await kekFromPrf(prf, salt);
+    const data = new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM', iv}, kek, raw));
+    const entry = {cred:credId, prfSalt:b64(prfSalt), salt:b64(salt), iv:b64(iv), data:b64(data), name:label.slice(0, 40), created:today()};
+    crypt = {key:crypt.key, wraps:{...crypt.wraps, pk:[...existing, entry].slice(-10)}};
+  }finally{ prf.fill(0); }
+}
+function guessDeviceName(){
+  const ua = navigator.userAgent;
+  if(/iPhone/.test(ua)) return 'iPhone'; if(/iPad/.test(ua)) return 'iPad'; if(/Android/.test(ua)) return 'Android';
+  if(/Windows/.test(ua)) return 'Windows PC'; if(/Mac/.test(ua)) return 'Mac'; return 'この端末';
+}
+function renderPasskeyPart(){
+  const env = passkeyEnv();
+  if(!env.ok){
+    return `<div class="pk-box"><h3>パスキー</h3><p class="small muted" style="margin:0">${env.reason === 'file'
+      ? 'パスキーは、HTTPSで公開したページで開いたときだけ使えます。いまはHTMLファイルを直接開いているため使えません（パスキーはWebサイトのドメインに結び付けて登録する仕組みのためです）。'
+      : 'このブラウザはパスキーに対応していません。'}</p></div>`;
+  }
+  const list = crypt.wraps.pk || [];
+  return `<div class="pk-box"><h3>パスキー</h3>
+    <p class="small muted" style="margin:0 0 8px">パスコードの代わりに、Windows Hello（PIN・顔・指紋）やスマホの画面ロックで開けるようにします。パスコードとリカバリーキーは予備としてそのまま使えます。</p>
+    ${list.length ? `<ul class="pk-list">${list.map((p, i) => `<li><span><b>${esc(p.name)}</b><span class="small muted">　登録 ${esc(jpDate(p.created))}</span></span><button class="btn small danger" data-pk-del="${i}">削除</button></li>`).join('')}</ul>` : '<p class="small" style="margin:0 0 8px">まだ登録されていません。</p>'}
+    <div class="row"><button class="btn" data-pa="pk-add">パスキーを登録</button>${list.length ? '<button class="btn" data-pa="pk-reset">パスキーで確認してパスコードを再設定</button>' : ''}</div></div>`;
+}
+$('#protectBox').addEventListener('click', async e => {
+  const del = e.target.closest('[data-pk-del]');
+  const b = e.target.closest('[data-pa="pk-add"], [data-pa="pk-reset"]');
+  if(del){
+    const i = +del.dataset.pkDel, p = (crypt.wraps.pk || [])[i]; if(!p) return;
+    if(!await confirmBox(`パスキー「${p.name}」を削除しますか？\n\nこのツールでは使えなくなります。端末やパスワードマネージャーに残ったパスキー自体は、それぞれの設定画面から削除してください。`, 'パスキーの削除', '削除する')) return;
+    crypt = {key:crypt.key, wraps:{...crypt.wraps, pk:crypt.wraps.pk.filter((_, j) => j !== i)}};
+    if(!crypt.wraps.pk.length) delete crypt.wraps.pk;
+    await flushSave(); renderProtect(); toast('パスキーを削除しました'); return;
+  }
+  if(!b) return;
+  if(b.dataset.pa === 'pk-add'){
+    let raw = null, label = guessDeviceName();
+    const ok = await passPrompt({
+      title:'パスキーを登録', ok:'次へ',
+      msg:'本人確認のため、いまのパスコードを入力してください。',
+      fields:[{k:'cur', label:'いまのパスコード', ac:'current-password'}, {k:'label', label:'パスキーの名前（どの端末か分かるように）', type:'text', value:label}],
+      validate: async v => {
+        try{ raw = await unwrapRaw(crypt.wraps.pass, v.cur); }catch(err){ return 'パスコードが違います。'; }
+        label = v.label.trim().slice(0, 40) || label; return null;
+      }
+    });
+    if(!ok || !raw) return;
+    let failed = null;
+    // パスキー作成は「ボタンを押した直後」に呼ぶ必要があるため、確認ボタンのクリックの中で開始する
+    const started = await actionBox('「パスキーを作成」を押すと、端末のパスキー作成画面（Windows Hello・スマホの画面ロックなど）が表示されます。案内に従って進めてください。\n\n端末によっては、確認のためにもう一度認証を求められます。',
+      'パスキーを作成', 'パスキーを作成', () => registerPasskey(raw, label).catch(err => { failed = err; }));
+    if(started) await started.p;
+    raw.fill(0);
+    if(!started) return;
+    if(failed){ toast(passkeyErrorText(failed)); return; }
+    await flushSave(); renderProtect(); toast(`パスキー「${label}」を登録しました。次からロック画面の「パスキーで開く」で開けます`);
+  }else{
+    let raw = null;
+    try{ raw = await rawFromPasskey(crypt.wraps.pk); }catch(err){ toast(passkeyErrorText(err)); return; }
+    const ok = await passPrompt({
+      title:'パスコードを再設定', ok:'設定する',
+      msg:'パスキーで本人確認できました。新しいパスコードを入力してください。',
+      fields:[{k:'p1', label:'新しいパスコード', ac:'new-password'}, {k:'p2', label:'新しいパスコード（もう一度）', ac:'new-password'}],
+      validate: async v => {
+        const m = checkNewPass(v.p1, v.p2); if(m) return m;
+        crypt = {key:crypt.key, wraps:{...crypt.wraps, pass:await wrapRaw(raw, v.p1)}}; return null;
+      }
+    });
+    raw.fill(0);
+    if(!ok) return;
+    await flushSave(); toast('パスコードを再設定しました');
+  }
+});
+$('#passkeyBtn').addEventListener('click', async () => {
+  const env = lockedEnvelope; const list = pkList(env);
+  if(!list.length) return;
+  const btn = $('#passkeyBtn'); btn.disabled = true; $('#unlockErr').textContent = '';
+  let raw = null;
+  try{ raw = await rawFromPasskey(list); }
+  catch(err){ $('#unlockErr').textContent = passkeyErrorText(err); btn.disabled = false; return; }
+  btn.disabled = false;
+  try{
+    const key = await importDataKey(raw);
+    const text = td.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:unb64(env.iv)}, key, unb64(env.data)));
+    finishUnlock(normalize(JSON.parse(text)), {key, wraps:{...env.wraps}});
+  }catch(err){ $('#unlockErr').textContent = 'データが壊れているため開けません。バックアップから復元してください。'; }
+  finally{ raw.fill(0); }
+});
+
+/* ===== 画像保存 ===== */
+$('#pngBtn').addEventListener('click', async () => {
+  const dim = DIMS.find(d => d.k === state.ui.dim);
+  const groups = aggregate(dim.k); const T = groups.reduce((a, g) => a + g.value, 0);
+  if(T <= 0){ toast('先に資産を入力してください'); return; }
+  // 画像は暗号化されないため、初期値は「比率だけ」（Esc・外側クリックでも比率だけ）
+  const showAmt = state.ui.hide ? false : await confirmBox('画像に金額も入れますか？\n\n画像ファイルは暗号化されません。SNSなどで共有する場合は「比率だけ」がおすすめです。', '画像で保存', '金額も入れる', '比率だけ');
+  const shown = dim.type === 'bars' ? groups.slice(0, 15) : groups;
+  const sc = 2, W = 720, rowH = 36, top = 96, donutH = dim.type === 'donut' ? 380 : 0;
+  const H = top + donutH + shown.length * rowH + 60;
+  const cv = document.createElement('canvas'); cv.width = W * sc; cv.height = H * sc;
+  const ctx = cv.getContext('2d'); ctx.scale(sc, sc);
+  const C = n => resolveColor(n);
+  const font = getComputedStyle(document.body).fontFamily;
+  ctx.fillStyle = C('var(--surface)'); ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = C('var(--ink)'); ctx.font = `700 26px ${font}`; ctx.textBaseline = 'alphabetic';
+  ctx.fillText(`資産配分（${dim.n}）`, 32, 52);
+  ctx.fillStyle = C('var(--ink2)'); ctx.font = `15px ${font}`;
+  ctx.fillText(`${jpDate(today())}時点${showAmt ? '　合計 ' + fmtInt(T) + '円' : ''}`, 32, 80);
+  let y = top;
+  if(dim.type === 'donut'){
+    const cx = W / 2, cy = top + 175, R = 165, r = 105;
+    let a = -Math.PI / 2;
+    groups.forEach(g => {
+      const sw = g.value / T * Math.PI * 2;
+      ctx.beginPath(); ctx.arc(cx, cy, R, a, a + sw); ctx.arc(cx, cy, r, a + sw, a, true); ctx.closePath();
+      ctx.fillStyle = C(g.color); ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = C('var(--surface)'); if(groups.length > 1) ctx.stroke();
+      a += sw;
+    });
+    ctx.textAlign = 'center'; ctx.fillStyle = C('var(--ink2)'); ctx.font = `15px ${font}`;
+    ctx.fillText('合計', cx, cy - 12);
+    ctx.fillStyle = C('var(--ink)'); ctx.font = `700 24px ${font}`;
+    ctx.fillText(showAmt ? man(T) : `${groups.length}区分`, cx, cy + 20);
+    ctx.textAlign = 'left';
+    y = top + donutH;
+  }
+  shown.forEach(g => {
+    ctx.fillStyle = C(g.color); ctx.fillRect(32, y + 10, 16, 16);
+    ctx.fillStyle = C('var(--ink)'); ctx.font = `16px ${font}`;
+    let name = g.name; while(ctx.measureText(name).width > 380 && name.length > 2) name = name.slice(0, -2) + '…';
+    ctx.fillText(name, 58, y + 24);
+    ctx.textAlign = 'right'; ctx.font = `700 16px ${font}`;
+    ctx.fillText(pct(g.value / T), W - 32, y + 24);
+    if(showAmt){ ctx.font = `15px ${font}`; ctx.fillStyle = C('var(--ink2)'); ctx.fillText(fmtInt(g.value) + '円', W - 110, y + 24); }
+    ctx.textAlign = 'left';
+    ctx.strokeStyle = C('var(--grid)'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(32, y + rowH); ctx.lineTo(W - 32, y + rowH); ctx.stroke();
+    y += rowH;
+  });
+  if(dim.type === 'bars' && groups.length > shown.length){ ctx.fillStyle = C('var(--ink2)'); ctx.font = `14px ${font}`; ctx.fillText(`ほか${groups.length - shown.length}件`, 32, y + 24); }
+  cv.toBlob(b => { download(`資産配分_${dim.n}_${today()}.png`, b); toast('画像を保存しました'); }, 'image/png');
+});
+
+/* ===== タブ ===== */
+function switchTab(t){
+  state.ui.tab = t; save();
+  $$('.tab').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === t));
+  $$('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + t));
+  hideTip();
+  if(t === 'history') renderHistory();
+  if(t === 'input') renderHoldings(openCardId());
+  if(t === 'chart' || t === 'target'){ renderCharts(); }
+  scrollTo({top:0});
+}
+$$('.tab').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+
+/* ===== 起動 ===== */
+// 起動のたびに、ブラウザ内の自動履歴を残す（保護中は暗号化されたまま）。記録が終わったら設定画面の一覧を描き直す
+pushHistory().then(() => { if(!locked) renderSettings(); });
+renderAll(); renderHoldings();
+autoFileBackupOnLaunch();   // PCのフォルダへの自動保存（許可済みなら確認なしで保存）
+if(locked){ showLock(); }
+else{ switchTab(state.ui.tab || 'chart'); autoUpdateRates(); }
+if(loadWarning) toast(loadWarning);
+})();
+</script>
+</body>
+</html>
